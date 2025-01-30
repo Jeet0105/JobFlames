@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 function AccessAccount() {
     const [isMoved, setIsMoved] = useState(false);
@@ -10,6 +11,7 @@ function AccessAccount() {
     const [error, setError] = useState("");
     const [contact_no, setContactno] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setIsMoved(!isMoved);
@@ -21,6 +23,7 @@ function AccessAccount() {
         setError("");
         try {
             if (isMoved) {
+                //Regristration
                 if (isJobSeeker) {
                     //Job Seeker
                     const res = await axios.post('http://localhost:3000/api/v1/user/register', { email, password,name,contact_no }, { withCredentials: true });
@@ -34,8 +37,10 @@ function AccessAccount() {
                 }
             }
             else {
+                //Login
                 const res = await axios.post('http://localhost:3000/api/v1/user/login', { email, password }, { withCredentials: true });
                 console.log(res.data);
+                navigate("/");
             }
         } catch (error) {
             console.error("Error:", error);
