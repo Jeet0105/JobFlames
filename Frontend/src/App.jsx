@@ -1,26 +1,19 @@
-import AccessAccount from "./Components/AccessAccount/AccessAccount"
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleTheme } from './Redux/Theme/themeSlice';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AccessAccount from './Components/AccessAccount/AccessAccount';
+import Header from './Components/header/header';
+import Footer from './Components/footer/footer';
 
 function App() {
-  const theme = useSelector((state) => state.theme.mode);
-  const dispatch = useDispatch();
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Header />
       <Routes>
-          <Route path="/auth" element={<AccessAccount />} />
-        </Routes>
-      </BrowserRouter>
-      <button
-          onClick={() => dispatch(toggleTheme())}
-          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Toggle Theme
-        </button>
-    </>
-  )
+        <Route path="/auth" element={<AccessAccount />} />
+        {/* Add more routes as needed */}
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
