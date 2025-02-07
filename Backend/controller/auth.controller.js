@@ -12,8 +12,11 @@ export const login = async (req, res) => {
 
     try {
         let user = await JobSeeker.findOne({ email });
+        let role = "jobseeker";
+
         if (!user) {
             user = await Company.findOne({ email });
+            role = user ? "company" : null;
         }
 
         if (!user) {
@@ -28,12 +31,12 @@ export const login = async (req, res) => {
         const { password: pass, ...rest } = user._doc;
 
         const token = jwt.sign(
-            { id: user._id, isAdmin: user.isAdmin },
+            { id: user._id, isAdmin: user.isAdmin, role },
             process.env.JWT_SECRET,
             { expiresIn: '5h' }
         );
 
-        return res.status(200).cookie('access_token', token, { httpOnly: true, }).json(rest);
+        return res.status(200).cookie('access_token', token, { httpOnly: true, }).json({...rest,role});
 
     } catch (error) {
         console.error("Error during login:", error);
