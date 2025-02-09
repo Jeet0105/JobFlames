@@ -1,10 +1,11 @@
 import bcryptjs from 'bcryptjs';
 import Company from "../model/Company.model.js";
+import Job from '../model/Job.modem.js';
 
-export const register = async (req, res) => {    
+export const register = async (req, res) => {
     const { name, email, password, contact_no } = req.body;
-    console.log(name,email,password,contact_no);
-    
+    console.log(name, email, password, contact_no);
+
     if (!name || !email || !password || !contact_no) {
         return res.status(400).json({ message: "All fields are required." });
     }
@@ -37,10 +38,53 @@ export const register = async (req, res) => {
         });
 
         await newCompany.save();
-        
+
         return res.status(201).json({ message: "Company created successfully." });
     } catch (error) {
         console.error("Error during registration:", error);
+        return res.status(500).json({ message: "Something went wrong. Please try again later." });
+    }
+};
+
+
+export const createJob = async (req, res) => {
+    const { title, description, location, salary_expected, experience, job_type, skills_required } = req.body;
+    const company_id = req.user?.id;
+
+    if (!company_id) {
+        return res.status(403).json({ message: "Unauthorized. Only companies can post jobs." });
+    }
+
+    if (!title || !description || !location || !salary_expected || !experience || !job_type || !Array.isArray(skills_required)) {
+        return res.status(400).json({ message: "All fields are required, and skills_required must be an array." });
+    }
+
+    const existingCompany = await Company.findById(company_id);
+    if (!existingCompany) {
+        return res.status(404).json({ message: "Company not found. Please register first." });
+    }
+
+    try {
+        const newJob = new Job({
+            title,
+            description,
+            company_id,
+            location,
+            salary_expected,
+            experience,
+            job_type,
+            skills_required
+        });
+
+        await newJob.save();
+
+        return res.status(201).json({
+            message: "Job posted successfully!",
+            job: newJob
+        });
+
+    } catch (error) {
+        console.error("Error creating job:", error);
         return res.status(500).json({ message: "Something went wrong. Please try again later." });
     }
 };
