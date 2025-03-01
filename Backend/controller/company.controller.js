@@ -55,7 +55,7 @@ export const createJob = async (req, res) => {
         return res.status(403).json({ message: "Unauthorized. Only companies can post jobs." });
     }
 
-    if (!title || !description || !location || !salary_expected || !experience || !job_type || !Array.isArray(skills_required)) {
+    if (!title || !description || !location || !salary_expected || !experience || !job_type) {
         return res.status(400).json({ message: "All fields are required, and skills_required must be an array." });
     }
 

@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/JobSeeker.route.js";
 import companyRouter from "./routes/company.route.js";
-import cors from 'cors'
+import cors from 'cors';
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true,
 }));
+app.use(cookieParser());
 
 
 app.use("/api/v1/user", userRouter);

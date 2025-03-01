@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Briefcase, MapPin, IndianRupee, Layers, List } from "lucide-react";
+import axios from "axios";
 
 function CreateJob() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ function CreateJob() {
     job_type: "full-time",
     skills_required: [],
   });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const jobTypes = ["full-time", "part-time", "contract", "internship"];
 
@@ -31,8 +34,19 @@ function CreateJob() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting job:", formData);
-    // TODO: Implement API call to post job
+    setError("");
+    setSuccess("");
+    try {
+      const res = await axios.post("http://localhost:3000/api/v1/company/post-job", formData, { withCredentials: true });
+      if (res.status === 201) {
+        setSuccess("Job posted successfully!");
+      } else {
+        console.log(res);
+        setError(res?.data?.message || "Error posting job");
+      }
+    } catch (error) {
+      setError(error?.response?.data?.message || "Something went wrong.");
+    }
   };
 
   return (
@@ -41,6 +55,9 @@ function CreateJob() {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Post a New Job
         </h2>
+
+        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+        {success && <p className="text-green-600 text-center mb-4">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center border rounded-lg p-3 bg-gray-50">
