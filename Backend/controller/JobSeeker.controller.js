@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import JobSeeker from '../model/JobSeeker.model.js';
+import Job from '../model/Job.modem.js';
 
 export const register = async (req, res) => {
   try {
@@ -44,3 +45,13 @@ export const register = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong. Please try again later." });
   }
 };
+
+export const getAllJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find();
+    return res.status(200).json(jobs);
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+}

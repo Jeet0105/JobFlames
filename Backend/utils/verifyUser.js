@@ -11,7 +11,7 @@ export const verifyToken = (req, res, next) => {
         req.user = decodedUser;
         next();
     } catch (err) {
-        console.error("JWT Error:", err.message); // Logs error for debugging
+        console.error("JWT Error:", err.message);
 
         if (err.name === "TokenExpiredError") {
             return res.status(401).json({ message: "Session expired. Please log in again." });

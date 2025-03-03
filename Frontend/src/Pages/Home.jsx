@@ -9,7 +9,7 @@ function Home() {
     if (!currentUser) {
       navigate("/auth");
     } else if (currentUser.role === "jobseeker") {
-      navigate("/jobs");
+      navigate("/showjob");
     } else if (currentUser.role === "company") {
       navigate("/createjob");
     } else {
