@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Briefcase, MapPin, IndianRupee, Layers, List } from "lucide-react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 function CreateJob() {
   const [formData, setFormData] = useState({
@@ -12,10 +14,12 @@ function CreateJob() {
     job_type: "full-time",
     skills_required: [],
   });
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const navigate = useNavigate();
   const jobTypes = ["full-time", "part-time", "contract", "internship"];
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,9 +30,14 @@ function CreateJob() {
   };
 
   const handleSkillsChange = (e) => {
+    const skills = e.target.value
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill !== "");
+
     setFormData({
       ...formData,
-      skills_required: e.target.value.split(",").map((skill) => skill.trim()),
+      skills_required: skills,
     });
   };
 
@@ -36,18 +45,34 @@ function CreateJob() {
     e.preventDefault();
     setError("");
     setSuccess("");
+
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/company/post-job", formData, { withCredentials: true });
+      const res = await axios.post("http://localhost:3000/api/v1/company/post-job", formData, {
+        withCredentials: true,
+      });
+
       if (res.status === 201) {
         setSuccess("Job posted successfully!");
+        setFormData({
+          title: "",
+          description: "",
+          location: "",
+          salary_expected: "",
+          experience: "",
+          job_type: "full-time",
+          skills_required: [],
+        });
       } else {
-        console.log(res);
         setError(res?.data?.message || "Error posting job");
       }
     } catch (error) {
       setError(error?.response?.data?.message || "Something went wrong.");
     }
   };
+
+  if (!currentUser || currentUser.role !== "company") {
+    navigate("/");
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen my-11">
