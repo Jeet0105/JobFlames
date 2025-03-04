@@ -38,7 +38,7 @@ const companySchema = mongoose.Schema({
         unique: true,
         match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"]
     }
-})
+},{timestamps:true})
 
 const Company = mongoose.model("Company", companySchema);
 export default Company;

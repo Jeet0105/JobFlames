@@ -36,7 +36,7 @@ const jobSeekerSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-});
+},{timestamps:true});
 
 const JobSeeker = mongoose.model("JobSeeker", jobSeekerSchema);
 export default JobSeeker;

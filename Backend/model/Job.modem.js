@@ -34,7 +34,7 @@ const jobSchema = new mongoose.Schema({
     skills_required:[{
         type: String
     }]
-});
+},{timestamps:true});
 
 const Job = mongoose.model("Job", jobSchema);
 export default Job;
