@@ -48,10 +48,15 @@ export const register = async (req, res) => {
 
 export const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find().populate('company_id', 'name');
+
+    if (!jobs || jobs.length === 0) {
+      return res.status(404).json({ message: "No jobs found." });
+    }
+
     return res.status(200).json(jobs);
   } catch (error) {
     console.error("Error fetching jobs:", error);
-    res.status(500).json({ message: "Internal server error. Please try again later." });
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
-}
+};

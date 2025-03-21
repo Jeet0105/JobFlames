@@ -31,7 +31,7 @@ const jobSchema = new mongoose.Schema({
         enum: ['full-time', 'part-time', 'contract', 'internship'],
         required: true
     },
-    skills_required:[{
+    skills_required: [{
         type: String
     }]
 },{timestamps:true});
