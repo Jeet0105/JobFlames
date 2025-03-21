@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { MapPin, Briefcase, IndianRupee } from 'lucide-react';
+import  { useNavigate } from 'react-router-dom';
 
 function ShowJobs() {
   const [jobs, setJobs] = useState([]);
@@ -8,6 +9,7 @@ function ShowJobs() {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -65,9 +67,9 @@ function ShowJobs() {
       ) : filteredJobs.length === 0 ? (
         <p className="text-center text-[#254A74] font-bold text-xl">No jobs found.</p>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex gap-6">
           {filteredJobs.map((job) => (
-            <div key={job._id} className="p-5 bg-[#1b3453] shadow-lg rounded-xl border text-white">
+            <div key={job._id} className="w-full md:w-[45%] lg:w-[30%] p-5 bg-[#1b3453] shadow-lg rounded-xl text-white">
               {/* Job Title */}
               <h3 className="text-xl font-semibold">{job.title}</h3>
               
@@ -99,8 +101,8 @@ function ShowJobs() {
               </div>
 
               {/* Apply Now Button */}
-              <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full">
-                Apply Now
+              <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full" onClick={()=>navigate(`/job/${job._id}`)}>
+                Details
               </button>
             </div>
           ))}
