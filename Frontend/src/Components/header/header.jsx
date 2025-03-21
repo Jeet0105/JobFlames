@@ -7,6 +7,9 @@ import axios from 'axios';
 import { signoutSuccess } from '../../Redux/user/userSlice';
 
 function Header() {
+
+
+    /// helloot this the code
     const { currentUser } = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [isDarkMode, setIsDarkMode] = useState(false);
