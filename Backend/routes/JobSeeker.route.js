@@ -9,6 +9,6 @@ router.post("/register", register);
 router.get("/logout",logout);
 router.post("/login", login);
 router.get("/getalljobs",verifyToken,getAllJobs);
-router.get("/getjobdetail/:id",getJobDetail)
+router.get("/getjobdetail/:id",verifyToken,getJobDetail)
 
 export default router;

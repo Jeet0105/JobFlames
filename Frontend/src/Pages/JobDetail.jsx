@@ -8,11 +8,14 @@ function JobDetail() {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/v1/user/getjobdetail/${id}`);
+        const res = await axios.get(`http://localhost:3000/api/v1/user/getjobdetail/${id}`, {
+          withCredentials: true
+        });
         setJob(res.data);
       } catch (err) {
         console.error("Error fetching job details:", err);
@@ -22,7 +25,17 @@ function JobDetail() {
       }
     };
     fetchJobDetail();
-  }, [id]);
+  }, []);
+
+  const handleApply = async (job_id) => {
+    try {
+      await axios.post(`http://localhost:3000/api/v1/application/apply/${id}`, {}, { withCredentials: true });
+      setMessage({ type: "success", text: "Application submitted successfully!" });
+    } catch (error) {
+      console.error("Error applying for job:", error);
+      setMessage({ type: "error", text: error.response?.data?.message || "Failed to apply." });
+    }
+  }
 
   if (loading) return <p className="text-center text-gray-500 min-h-screen">Loading job details...</p>;
   if (error) return <p className="text-center text-red-500 min-h-screen">{error}</p>;
@@ -30,6 +43,7 @@ function JobDetail() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 min-h-[50vh] bg-[#1b3453] shadow-lg rounded-lg m-5">
+      
       {/* Header Section */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg p-6">
         <h2 className="text-3xl font-bold">{job.title}</h2>
@@ -74,9 +88,14 @@ function JobDetail() {
         </div>
 
         {/* Apply Button */}
-        <button className="mt-8 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-lg hover:opacity-90 w-full text-lg font-semibold shadow-md">
+        <button className="mt-8 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-lg hover:opacity-90 w-full text-lg font-semibold shadow-md" onClick={() => handleApply(id)}>
           Apply Now
         </button>
+        {message && (
+        <p className={`text-center font-semibold mt-7 ${message.type === "success" ? "text-green-500" : "text-red-500"}`}>
+          {message.text}
+        </p>
+      )}
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/JobSeeker.route.js";
 import companyRouter from "./routes/company.route.js";
+import applicationRouter from "./routes/Application.router.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 
@@ -21,6 +22,8 @@ app.use(cookieParser());
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/company",companyRouter);
+app.use("/api/v1/application",applicationRouter);
+
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB"))

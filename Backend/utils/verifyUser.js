@@ -9,6 +9,7 @@ export const verifyToken = (req, res, next) => {
 
         const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decodedUser;
+        
         next();
     } catch (err) {
         console.error("JWT Error:", err.message);
