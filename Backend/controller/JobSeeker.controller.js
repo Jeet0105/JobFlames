@@ -65,9 +65,9 @@ export const getAllJobs = async (req, res) => {
 export const getJobDetail = async (req, res) => {
   try {
     const { id } = req.params;
-    if(!id)
+    if (!id)
       return res.status(400).json({ message: "Job ID is required" });
-    
+
     // Fetch job details along with company information
     const job = await Job.findById(id).populate('company_id', 'name email website description location logo contact_no');
 

@@ -8,6 +8,7 @@ import Contact from './Pages/Contact';
 import CreateJob from './Pages/CreateJob';
 import ShowJobs from './Pages/ShowJob';
 import Profile from './Pages/Profile';
+import JobDetail from './Pages/JobDetail';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='/createjob' element={<CreateJob />}/>
         <Route path='/showjob' element={<ShowJobs />}/>
         <Route path='/profile' element={<Profile />} />
+        <Route path="/job/:id" element={<JobDetail />} />
       </Routes>
       <Footer />
     </BrowserRouter>
