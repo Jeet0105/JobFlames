@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit } from "react-icons/fa";
+import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit,FaLink } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
@@ -57,14 +57,14 @@ function JobSeekerInfo() {
                     <div className='flex items-center gap-6'>
                         <div className="relative">
                             <img
-                                src={currentUser.profilePicture}
+                                src={currentUser?.profilePicture}
                                 alt="Profile"
                                 className="w-28 h-28 rounded-full border-4 border-blue-500 shadow-md object-cover"
                             />
                         </div>
                         <div className="text-center md:text-left">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{currentUser.name}</h1>
-                            <p className="text-gray-600 dark:text-gray-400">Experience: {currentUser.experience} years</p>
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{currentUser?.name}</h1>
+                            <p className="text-gray-600 dark:text-gray-400">Experience: {currentUser?.experience} years</p>
                         </div>
                     </div>
                     <div className="text-center">
@@ -81,21 +81,21 @@ function JobSeekerInfo() {
                 <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 mb-6">
                     <div className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
                         <FaEnvelope className="text-blue-600" />
-                        <a href={`mailto:${currentUser.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">
-                            {currentUser.email}
+                        <a href={`mailto:${currentUser?.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">
+                            {currentUser?.email}
                         </a>
                     </div>
                     <div className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
                         <FaPhone className="text-green-600" />
-                        <span>{currentUser.contact_no}</span>
+                        <span>{currentUser?.contact_no}</span>
                     </div>
                 </div>
 
 
                 <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 mb-6">
-                    {currentUser.AllLinks?.map((linkItem, index) => (
+                    {currentUser?.AllLinks?.map((linkItem, index) => (
                         <div key={index} className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
-                            {linkItem.LinkLabel.toLowerCase().includes("github") ? (
+                            {linkItem?.LinkLabel.toLowerCase().includes("github") ? (
                                 <FaGithub className="text-gray-800 dark:text-gray-200" />
                             ) : linkItem.LinkLabel.toLowerCase().includes("linkedin") ? (
                                 <FaLinkedin className="text-blue-700" />
@@ -117,9 +117,9 @@ function JobSeekerInfo() {
 
                 <div className="text-center mb-6">
                     <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Resume</h2>
-                    {currentUser.resumeUrl !== 'No Resume Url' ? (
+                    {currentUser?.resumeUrl !== 'No Resume Url' ? (
                         <a
-                            href={currentUser.resumeUrl}
+                            href={currentUser?.resumeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-500 dark:hover:to-indigo-500 transition-all shadow-md"

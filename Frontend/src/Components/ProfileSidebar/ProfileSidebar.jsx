@@ -1,14 +1,31 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { HiChartPie, HiUser, HiBriefcase, HiClipboardList, HiArrowSmRight } from "react-icons/hi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { signoutSuccess } from "../../Redux/user/userSlice";
+import axios from "axios";
 
-const handleSignout = async () => {
 
-}
 
 function ProfileSidebar() {
-    const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const currentUser = useSelector((state) => state.user.currentUser);
+
+    const handleSignout = async () => {
+        try{
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/company/logout`, { withCredentials: true });
+            if(res.status==200){
+                console.log(res)
+                toast.success(res?.data?.message)
+                dispatch(signoutSuccess());
+                navigate('/auth');
+            }
+        }catch (error) {
+            toast.error(error?.response?.data?.message);
+            console.log(error);
+        }
+}
 
     return (
         <aside className="w-full bg-gray-900 text-white h-full p-4">
@@ -20,7 +37,7 @@ function ProfileSidebar() {
                     to="/profile/JobSeeker"
                     icon={HiUser}
                     text="Profile"
-                    label={currentUser.isAdmin ? "Admin" : "User"}
+                    label={currentUser?.isAdmin ? "Admin" : "User"}
                 />
                 <SidebarItem to="/profile?tab=jobs"  icon={HiBriefcase} text="Job Listings" />
                 <SidebarItem to="/profile?tab=applications"  icon={HiClipboardList} text="Applications" />

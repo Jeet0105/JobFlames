@@ -70,8 +70,8 @@ function EditProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Handle submit")
-    console.log('currentUser.role: ', currentUser.role);
-    if (currentUser.role === "jobseeker") {
+    console.log('currentUser.role: ', currentUser?.role);
+    if (currentUser?.role === "jobseeker") {
       console.log("in if statement")
       setLoading(true);
       await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/updateJobSeeker`,{

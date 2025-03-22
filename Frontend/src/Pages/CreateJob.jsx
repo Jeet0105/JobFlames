@@ -3,6 +3,7 @@ import { Briefcase, MapPin, IndianRupee, Layers, List } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 function CreateJob() {
   const [formData, setFormData] = useState({
@@ -53,6 +54,7 @@ function CreateJob() {
 
       if (res.status === 201) {
         setSuccess("Job posted successfully!");
+        toast.success("Job posted successfully!");
         setFormData({
           title: "",
           description: "",
@@ -63,14 +65,16 @@ function CreateJob() {
           skills_required: [],
         });
       } else {
+        toast.error(res?.data?.message);
         setError(res?.data?.message || "Error posting job");
       }
     } catch (error) {
+      toast.error(error?.response?.data?.message);
       setError(error?.response?.data?.message || "Something went wrong.");
     }
   };
 
-  if (!currentUser || currentUser.role !== "company") {
+  if (!currentUser || currentUser?.role !== "company") {
     navigate("/");
   }
 

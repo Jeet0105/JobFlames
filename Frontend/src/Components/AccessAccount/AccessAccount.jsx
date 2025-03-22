@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../../Redux/user/userSlice';
+import { toast } from 'react-toastify';
 
 function AccessAccount() {
     const [isMoved, setIsMoved] = useState(false);
@@ -43,14 +44,21 @@ function AccessAccount() {
                 //Login
                 const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/login`, { email, password }, { withCredentials: true });
                 console.log(res.data);
-                dispatch(signInSuccess(res.data))
-                navigate("/");
+                if (res?.status === 200){
+                    toast.success(res?.data?.message);
+                    dispatch(signInSuccess(res.data))
+                    navigate("/");
+                }
+                else{
+                    toast.error(res?.data?.message);
+                }
             }
         } catch (error) {
             console.error("Error:", error);
             console.error("Error message:", error.message);
             console.error("Error response:", error.response);
-            setError(error.response?.data?.message || "An error occurred. Please try again.");
+            toast.error(error.response?.data?.message)
+            // setError(error.response?.data?.message || "An error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
