@@ -25,7 +25,7 @@ function Header() {
     const handleLogout = async () => {
         setDropdownOpen(false);
         try{
-            const res = await axios.get("http://localhost:3000/api/v1/company/logout", { withCredentials: true });
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/company/logout`, { withCredentials: true });
             if(res.status==200){
                 navigate('/auth');
                 dispatch(signoutSuccess());

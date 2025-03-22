@@ -1,21 +1,15 @@
 import React, { useState } from 'react'
 import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 function JobSeekerInfo() {
-    const [profileData, setProfileData] = useState({
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        contact_no: '+1234567890',
-        resume_url: 'https://morth.nic.in/sites/default/files/dd12-13_0.pdf',  
-        resumeFile: null, 
-        experience: '5',
-        profilePicture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png',
-        github: 'https://morth.nic.in/sites/default/files/dd12-13_0.pdf',
-        linkedin: "https://morth.nic.in/sites/default/files/dd12-13_0.pdf"
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const navigate = useNavigate();
+    console.log('currentUser: ', currentUser);
 
-    });
 
-   
+
     // const handleProfilePictureChange = (e) => {
     //     const file = e.target.files[0];
     //     if (file) {
@@ -26,7 +20,7 @@ function JobSeekerInfo() {
     //     }
     // };
 
- 
+
     // const handleResumeURLChange = (e) => {
     //     const url = e.target.value;
     //     setProfileData({
@@ -63,62 +57,69 @@ function JobSeekerInfo() {
                     <div className='flex items-center gap-6'>
                         <div className="relative">
                             <img
-                                src={profileData.profilePicture}
+                                src={currentUser.profilePicture}
                                 alt="Profile"
                                 className="w-28 h-28 rounded-full border-4 border-blue-500 shadow-md object-cover"
                             />
                         </div>
                         <div className="text-center md:text-left">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{profileData.name}</h1>
-                            <p className="text-gray-600 dark:text-gray-400">Experience: {profileData.experience} years</p>
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{currentUser.name}</h1>
+                            <p className="text-gray-600 dark:text-gray-400">Experience: {currentUser.experience} years</p>
                         </div>
                     </div>
                     <div className="text-center">
                         <button
-                            onClick={() => navigate("/edit-profile")}
+                            onClick={() => navigate(`/profile/edit-profile/${currentUser?._id}`)}
                             className="px-6 py-3 flex justify-center gap-3 items-center bg-blue-600 dark:bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 dark:hover:bg-blue-400 transition-all"
                         >
-                            <FaEdit className="text-center" /> <span>Profile</span>
+                            <FaEdit className="text-center" /> <span>Edit</span>
                         </button>
                     </div>
                 </div>
 
-          
+
                 <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 mb-6">
                     <div className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
                         <FaEnvelope className="text-blue-600" />
-                        <a href={`mailto:${profileData.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">
-                            {profileData.email}
+                        <a href={`mailto:${currentUser.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">
+                            {currentUser.email}
                         </a>
                     </div>
                     <div className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
                         <FaPhone className="text-green-600" />
-                        <span>{profileData.contact_no}</span>
+                        <span>{currentUser.contact_no}</span>
                     </div>
                 </div>
 
-              
+
                 <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 mb-6">
-                    <div className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
-                        <FaGithub className="text-gray-800 dark:text-gray-200" />
-                        <a href={profileData.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">
-                            GitHub Profile
-                        </a>
-                    </div>
-                    <div className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
-                        <FaLinkedin className="text-blue-700" />
-                        <a href={profileData.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">
-                            LinkedIn Profile
-                        </a>
-                    </div>
+                    {currentUser.AllLinks?.map((linkItem, index) => (
+                        <div key={index} className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
+                            {linkItem.LinkLabel.toLowerCase().includes("github") ? (
+                                <FaGithub className="text-gray-800 dark:text-gray-200" />
+                            ) : linkItem.LinkLabel.toLowerCase().includes("linkedin") ? (
+                                <FaLinkedin className="text-blue-700" />
+                            ) : (
+                                <FaLink className="text-gray-500 dark:text-gray-400" />
+                            )}
+                            <a
+                                href={linkItem.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                {linkItem.LinkLabel}
+                            </a>
+                        </div>
+                    ))}
                 </div>
 
-       
+
                 <div className="text-center mb-6">
                     <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Resume</h2>
-                    {profileData.resume_url ? (
+                    {currentUser.resumeUrl !== 'No Resume Url' ? (
                         <a
-                            href={profileData.resume_url}
+                            href={currentUser.resumeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-500 dark:hover:to-indigo-500 transition-all shadow-md"

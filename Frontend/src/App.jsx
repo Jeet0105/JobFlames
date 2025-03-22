@@ -10,6 +10,7 @@ import ShowJobs from './Pages/ShowJob';
 import Profile from './Pages/Profile';
 import JobSeekerInfo from './Components/JobSeekerInfo/JobSeekerInfo';
 import JobDetail from './Pages/JobDetail';
+import EditProfile from './Components/Edit-Profile/EditProfile';
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
         <Route path='/profile' element={<Profile />} >
           <Route path='JobSeeker' element={<JobSeekerInfo />} />
           <Route path='Company' element={<Profile />} />
+          <Route path='edit-profile/:id' element={<EditProfile />} />
+
         </Route>
         <Route path="/job/:id" element={<JobDetail />} />
       </Routes>

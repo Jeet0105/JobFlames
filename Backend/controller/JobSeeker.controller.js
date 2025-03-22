@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs';
 import JobSeeker from '../model/JobSeeker.model.js';
 import Job from '../model/Job.modem.js';
 import Company from "../model/Company.model.js";
+import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 export const register = async (req, res) => {
   try {
@@ -46,6 +47,117 @@ export const register = async (req, res) => {
     return res.status(500).json({ message: "Something went wrong. Please try again later." });
   }
 };
+
+export const updateJobSeekers = async (req, res) => {
+  try {
+    const { _id, name, email, contact_no, experience, AllLinks } = req.body;
+    let profilePictureUrl = null;
+    let resumeUrl = null;
+
+    if (!_id || !name || !email || !contact_no || !experience ) {
+      return res.status(400).json({
+        message: "All fields are required",
+        success: false,
+        status: 400
+      });
+    }
+
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    if (!phoneRegex.test(contact_no)) {
+      return res.status(400).json({
+        message: "Please enter a valid phone number",
+        success: false,
+        status: 400
+      });
+    }
+
+    const existingUser = await JobSeeker.findOne({ email: email, _id: _id });
+    if (!existingUser) {
+      return res.status(400).json({
+        message: "JobSeeker doesn't exists",
+        success: false,
+        status: 400
+      });
+    }
+
+    const allEmails = await JobSeeker.find({ email: email });
+    if (allEmails.length > 1) {
+      allEmails.forEach((user) => {
+        if (user._id !== existingUser._id) {
+          return res.status(400).json({
+            message: "Email already exists",
+            success: false,
+            status: 400
+          });
+        }
+      })
+    }
+
+    const allContacts = await JobSeeker.find({ contact_no: contact_no });
+    if (allContacts.length > 1) {
+      allContacts.forEach((user) => {
+        if (user._id !== existingUser._id) {
+          return res.status(400).json({
+            message: "Contact already exists",
+            success: false,
+            status: 400
+          });
+        }
+      })
+    }
+    if (req.files?.profilePicture) {
+      const fileType = req.files.profilePicture[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+      const localPath = req.files.profilePicture[0].path;
+      const uploadResponse = await uploadOnCloudinary(localPath, fileType);
+      profilePictureUrl = uploadResponse?.secure_url || null;
+    }
+    
+    console.log('req.files: ', req.files);
+    
+    if (req.files?.resumeUrl) {
+      const fileType = req.files.resumeUrl[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+      const localPath = req.files.resumeUrl[0].path;
+      const uploadResponse = await uploadOnCloudinary(localPath, fileType);
+      resumeUrl = uploadResponse?.secure_url || null;
+    }
+    
+
+    const updatedJobSeeker = await JobSeeker.findOneAndUpdate({ _id: existingUser._id }, {
+      name,
+      email,
+      contact_no,
+      experience,
+      profilePicture : profilePictureUrl? profilePictureUrl : existingUser.profilePicture,
+      resumeUrl : resumeUrl? resumeUrl : existingUser.resumeUrl,
+      AllLinks
+    }, { new: true });
+
+    if (!updatedJobSeeker) {
+      return res.status(404).json({
+        message : "JobSeeker Not found",
+        success : false,
+        status : 404
+      })
+    }
+
+    // const newUser = { ...updatedJobSeeker, role: "jobseeker" }; 
+    const updatedJobSeekers = updatedJobSeeker.toObject(); 
+    updatedJobSeekers.role = "jobseeker";
+    return res.status(200).json({
+      message : "JobSeeker Updated SuccessFully..!",
+      success : true,
+      status : 200,
+      data : updatedJobSeekers
+    })
+  } catch (error) {
+    console.log("Error while updating JobSeeker : ",error);
+    return res.status(500).json({
+      message : "Internal server error",
+      success : false,
+      status : 500
+    })
+  }
+}
 
 export const getAllJobs = async (req, res) => {
   try {
