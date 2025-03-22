@@ -27,6 +27,7 @@ const jobSeekerSchema = new mongoose.Schema({
     },
     resume_url: {
         type: String,
+        default: "a"
     },
     experience: {
         type: String,
