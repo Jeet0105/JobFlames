@@ -9,6 +9,7 @@ import CreateJob from './Pages/CreateJob';
 import ShowJobs from './Pages/ShowJob';
 import Profile from './Pages/Profile';
 import JobSeekerInfo from './Components/JobSeekerInfo/JobSeekerInfo';
+import JobDetail from './Pages/JobDetail';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='JobSeeker' element={<JobSeekerInfo />} />
           <Route path='Company' element={<Profile />} />
         </Route>
+        <Route path="/job/:id" element={<JobDetail />} />
       </Routes>
       <Footer />
     </BrowserRouter>

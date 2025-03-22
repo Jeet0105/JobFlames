@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import JobSeeker from '../model/JobSeeker.model.js';
 import Job from '../model/Job.modem.js';
+import Company from "../model/Company.model.js";
 
 export const register = async (req, res) => {
   try {
@@ -57,6 +58,26 @@ export const getAllJobs = async (req, res) => {
     return res.status(200).json(jobs);
   } catch (error) {
     console.error("Error fetching jobs:", error);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+};
+
+export const getJobDetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id)
+      return res.status(400).json({ message: "Job ID is required" });
+
+    // Fetch job details along with company information
+    const job = await Job.findById(id).populate('company_id', 'name email website description location logo contact_no');
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    return res.status(200).json(job);
+  } catch (error) {
+    console.error("Error fetching job details:", error);
     return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 };
