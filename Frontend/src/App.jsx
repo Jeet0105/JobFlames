@@ -8,6 +8,7 @@ import Contact from './Pages/Contact';
 import CreateJob from './Pages/CreateJob';
 import ShowJobs from './Pages/ShowJob';
 import Profile from './Pages/Profile';
+import JobSeekerInfo from './Components/JobSeekerInfo/JobSeekerInfo';
 
 function App() {
   return (
@@ -20,7 +21,10 @@ function App() {
         <Route path='/contact' element={<Contact />}/>
         <Route path='/createjob' element={<CreateJob />}/>
         <Route path='/showjob' element={<ShowJobs />}/>
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile' element={<Profile />} >
+          <Route path='JobSeeker' element={<JobSeekerInfo />} />
+          <Route path='Company' element={<Profile />} />
+        </Route>
       </Routes>
       <Footer />
     </BrowserRouter>
