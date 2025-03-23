@@ -34,7 +34,7 @@ function ProfileSidebar() {
                     <SidebarItem to="/profile?tab=dash" active={tab === "dash" || !tab} icon={HiChartPie} text="profile" />
                 )} */}
                 <SidebarItem
-                    to="/profile/JobSeeker"
+                    to={currentUser?.role === "jobseeker" ? "/profile/JobSeeker" : "/profile/Company"}
                     icon={HiUser}
                     text="Profile"
                     label={currentUser?.isAdmin ? "Admin" : "User"}

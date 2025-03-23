@@ -13,6 +13,9 @@ import JobDetail from './Pages/JobDetail';
 import EditProfile from './Components/Edit-Profile/EditProfile';
 import CompanyInfo from './Components/CompanyInfo/CompanyInfo';
 import { useSelector } from 'react-redux';
+import Com_Edit_Profile from './Components/Com-Edit-Profile/Com_Edit_Profile';
+import CreateSubscriptionPlan from './Components/CreateSubscriptionPlan/CreateSubscriptionPlan';
+import SubscriptionPlans from './Components/SubscriptionPlan/SubscriptionPlan';
 
 function App() {
 
@@ -29,15 +32,13 @@ function App() {
         <Route path='/createjob' element={<CreateJob />}/>
         <Route path='/showjob' element={<ShowJobs />}/>
         <Route path='/profile' element={<Profile />} >
-        {currentUser?.role === "jobseeker" ? 
-          <Route index element={<Navigate to="JobSeeker" />} /> 
-          : 
-          <Route index element={<Navigate to="Company" />} />
-          }
+          <Route index element={<Navigate to={currentUser?.role === "jobseeker" ?"JobSeeker" : "Company" }/>} /> 
           <Route path='JobSeeker' element={<JobSeekerInfo />} />
           <Route path='Company' element={<CompanyInfo />} />
-          <Route path='edit-profile/:id' element={<EditProfile />} />
+          <Route path='Create-Subscription' element={<CreateSubscriptionPlan />} />
+          <Route path='edit-profile/:id' element={currentUser?.role === "jobseeker" ? <EditProfile /> : <Com_Edit_Profile/>} />
         </Route>
+        <Route path="/SubscriptionPlan" element={<SubscriptionPlans />} />
         <Route path="/job/:id" element={<JobDetail />} />
       </Routes>
       <Footer />

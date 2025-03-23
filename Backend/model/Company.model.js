@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const companySchema = mongoose.Schema({
     name: {
@@ -24,6 +24,9 @@ const companySchema = mongoose.Schema({
     location: {
         type: String
     },
+    industry_type: { 
+        type: String, 
+    },
     jobs_id: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Job'
@@ -37,7 +40,30 @@ const companySchema = mongoose.Schema({
         required: true,
         unique: true,
         match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"]
-    }
+    },
+    AllLinks :{
+        type : [{
+            LinkLabel : {
+                type : String
+            },
+            Link : {
+                type : String
+            }
+        }]
+    },
+    Subscription_Plan : {
+        type : Schema.Types.ObjectId,
+        ref : "Subscription",
+        default : null
+    },
+    subscription_start: { 
+        type: String, 
+        default: null 
+    }, 
+    subscription_end: { 
+        type: String, 
+        default: null 
+    },
 },{timestamps:true})
 
 const Company = mongoose.model("Company", companySchema);

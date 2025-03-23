@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit,FaLink } from "react-icons/fa";
+import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit,FaLink, FaStar } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
@@ -49,6 +49,19 @@ function JobSeekerInfo() {
     //     });
     // };
 
+    const renderStars = (rating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <FaStar 
+                    key={i} 
+                    className={`text-xl ${i <= rating ? "text-yellow-500" : "text-gray-300 dark:text-gray-600"}`} 
+                />
+            );
+        }
+        return stars;
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-200 dark:from-gray-900 dark:to-gray-800 px-6 py-5">
             <div className="w-full max-w-3xl bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-10 border border-gray-200 dark:border-gray-700 relative">
@@ -65,6 +78,11 @@ function JobSeekerInfo() {
                         <div className="text-center md:text-left">
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{currentUser?.name}</h1>
                             <p className="text-gray-600 dark:text-gray-400">Experience: {currentUser?.experience} years</p>
+
+                            <div className="flex items-center mt-2">
+                                {renderStars(currentUser?.rating)}  
+                                <span className="ml-2 text-gray-700 dark:text-gray-300 text-sm">({currentUser?.rating}/5)</span>
+                            </div>
                         </div>
                     </div>
                     <div className="text-center">
@@ -103,7 +121,7 @@ function JobSeekerInfo() {
                                 <FaLink className="text-gray-500 dark:text-gray-400" />
                             )}
                             <a
-                                href={linkItem.link}
+                                href={linkItem.Link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 dark:text-blue-400 hover:underline"
