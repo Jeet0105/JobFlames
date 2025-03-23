@@ -11,11 +11,8 @@ router.post("/register", register);
 router.get("/logout",logout);
 router.post("/login", login);
 router.get("/getalljobs",verifyToken,getAllJobs);
-<<<<<<< HEAD
 router.get("/getjobdetail/:id",verifyToken,getJobDetail)
-=======
 router.put("/updateJobSeeker",verifyToken,uploadMiddleware,updateJobSeekers);
 router.get("/getjobdetail/:id",getJobDetail);
->>>>>>> ea27fa14160f05b6cadc2bef5c7fe7672bddeaa0
 
 export default router;

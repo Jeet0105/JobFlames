@@ -14,7 +14,7 @@ function ShowJobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/getalljobs`, { withCredentials: true });
+        const res = await axios.get(`http://localhost:3000/api/v1/user/getalljobs`, { withCredentials: true });
         setJobs(res.data);
         setFilteredJobs(res.data);
         console.log(res.data);

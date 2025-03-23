@@ -13,13 +13,9 @@ function JobDetail() {
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
-<<<<<<< HEAD
         const res = await axios.get(`http://localhost:3000/api/v1/user/getjobdetail/${id}`, {
           withCredentials: true
         });
-=======
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/getjobdetail/${id}`);
->>>>>>> ea27fa14160f05b6cadc2bef5c7fe7672bddeaa0
         setJob(res.data);
       } catch (err) {
         console.error("Error fetching job details:", err);
