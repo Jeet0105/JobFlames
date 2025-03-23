@@ -11,6 +11,7 @@ export const login = async (req, res) => {
 
     try {
         let user = await JobSeeker.findOne({ email });
+        console.log('user: ', user);
         let role = user ? "jobseeker" : null;
 
         if (!user) {
@@ -35,6 +36,7 @@ export const login = async (req, res) => {
             { expiresIn: "5h" }
         );
 
+        console.log('{ ...rest, role }: ', { ...rest, role });
         return res
             .status(200)
             .cookie("access_token", token, {

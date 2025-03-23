@@ -8,9 +8,9 @@ function Home() {
   const handleNavigation = () => {
     if (!currentUser) {
       navigate("/auth");
-    } else if (currentUser.role === "jobseeker") {
+    } else if (currentUser?.role === "jobseeker") {
       navigate("/showjob");
-    } else if (currentUser.role === "company") {
+    } else if (currentUser?.role === "company") {
       navigate("/createjob");
     } else {
       navigate("/");

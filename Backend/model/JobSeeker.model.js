@@ -33,6 +33,20 @@ const jobSeekerSchema = new mongoose.Schema({
         type: String,
         default: "0"
     },
+    AllLinks : {
+        type : [{
+            LinkLabel : {
+                type : String
+            },
+            link : {
+                type : String
+            }
+        }]
+    },
+    resumeUrl : {
+        type : String,
+        default : "No Resume Url"
+    },
     password:{
         type: String,
         required: true
