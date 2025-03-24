@@ -12,7 +12,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const phoneRegex = /^\+?[1-9]\d{1,10}$/;
+    const phoneRegex = /^\+?[1-9]\d{9,14}$/;
     if (!phoneRegex.test(contact_no)) {
       return res.status(400).json({ message: "Please enter a valid phone number" });
     }
@@ -208,7 +208,7 @@ export const registerInterviewer = async (req, res) => {
     }
 
     // Proceed to register the interviewer
-    const { name, email, password, phone, specialization, experience, availability, linkedInProfile } = req.body;
+    const { name, email, password, phone, specialization, experience, linkedInProfile } = req.body;
 
     // Check if interviewer already exists
     const existingInterviewer = await Interviewer.findOne({ email });
@@ -217,8 +217,8 @@ export const registerInterviewer = async (req, res) => {
     }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
-    const phoneRegex = /^\+?[1-9]\d{1,10}$/;
-    if (!phoneRegex.test(contact_no)) {
+    const phoneRegex = /^\+?[1-9]\d{9,14}$/;
+    if (!phoneRegex.test(phone)) {
       return res.status(400).json({ message: "Please enter a valid phone number" });
     }
 
@@ -237,7 +237,6 @@ export const registerInterviewer = async (req, res) => {
       phone,
       specialization,
       experience,
-      availability,
       linkedInProfile,
     });
 

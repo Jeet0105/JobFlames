@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { User, Mail, Lock, Phone, Briefcase, Calendar, Clock, Linkedin } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const RegisterInterviewer = () => {
     const [formData, setFormData] = useState({
@@ -9,11 +11,9 @@ const RegisterInterviewer = () => {
         phone: "",
         specialization: "",
         experience: "",
-        availability: "",
         linkedInProfile: "",
     });
 
-    const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -23,13 +23,12 @@ const RegisterInterviewer = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setMessage(null);
 
         try {
-            const response = await axios.post("http://localhost:3000/api/interviewers/register", formData, {
+            const response = await axios.post("http://localhost:3000/api/v1/user/registerInterviewer", formData, {
                 withCredentials: true,
             });
-            setMessage({ type: "success", text: response.data.message });
+            toast.success(response.data.message);
             setFormData({
                 name: "",
                 email: "",
@@ -41,38 +40,40 @@ const RegisterInterviewer = () => {
                 linkedInProfile: "",
             });
         } catch (error) {
-            setMessage({
-                type: "error",
-                text: error.response?.data?.message || "Registration failed!",
-            });
+            toast.error(error?.response?.data?.message || "Registration failed!");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-            <h2 className="text-2xl font-semibold text-center mb-4">Register Interviewer</h2>
-            {message && (
-                <p className={`p-2 text-center rounded ${message.type === "error" ? "bg-red-500 text-white" : "bg-green-500 text-white"}`}>
-                    {message.text}
-                </p>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input type="text" name="specialization" placeholder="Specialization" value={formData.specialization} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input type="number" name="experience" placeholder="Years of Experience" value={formData.experience} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input type="text" name="availability" placeholder="Availability (e.g., Weekends, Evenings)" value={formData.availability} onChange={handleChange} className="w-full p-2 border rounded" />
-                <input type="url" name="linkedInProfile" placeholder="LinkedIn Profile (optional)" value={formData.linkedInProfile} onChange={handleChange} className="w-full p-2 border rounded" />
-                <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" disabled={loading}>
-                    {loading ? "Registering..." : "Register"}
-                </button>
-            </form>
+        <div className="flex justify-center items-center min-h-screen">
+            <div className="w-full max-w-lg bg-[#1b3453] shadow-lg rounded-2xl p-8 m-8">
+                <h2 className="text-3xl font-bold text-center text-white mb-6">Register Interviewer</h2>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <InputField icon={User} type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} />
+                    <InputField icon={Mail} type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+                    <InputField icon={Lock} type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
+                    <InputField icon={Phone} type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
+                    <InputField icon={Briefcase} type="text" name="specialization" placeholder="Specialization" value={formData.specialization} onChange={handleChange} />
+                    <InputField icon={Calendar} type="number" name="experience" placeholder="Years of Experience" value={formData.experience} onChange={handleChange} />
+                    <InputField icon={Linkedin} type="url" name="linkedInProfile" placeholder="LinkedIn Profile (optional)" value={formData.linkedInProfile} onChange={handleChange} />
+
+                    <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-lg" disabled={loading}>
+                        {loading ? "Registering..." : "Register"}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
+
+const InputField = ({ icon: Icon, ...props }) => (
+    <div className="flex items-center border rounded-lg p-3 bg-gray-50">
+        <Icon className="text-gray-500 mr-3" />
+        <input {...props} className="w-full bg-transparent outline-none text-gray-700" required/>
+    </div>
+);
 
 export default RegisterInterviewer;

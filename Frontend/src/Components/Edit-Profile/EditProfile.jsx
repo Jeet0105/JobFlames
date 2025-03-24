@@ -74,7 +74,7 @@ function EditProfile() {
     if (currentUser?.role === "jobseeker") {
       console.log("in if statement")
       setLoading(true);
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/updateJobSeeker`,{
+      await axios.put(`http://localhost:3000/api/v1/user/updateJobSeeker`,{
         _id : currentUser?._id,
         name : formData?.name,
         email : formData?.email,

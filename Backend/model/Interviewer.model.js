@@ -31,26 +31,14 @@ const interviewerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    availability: [
-      {
-        day: { type: String, required: true },
-        timeSlots: [{ type: String, required: true }],
-      }
-    ],
     rating: {
       type: Number,
       min: [1, "Rating must be at least 1"],
       max: [5, "Rating cannot exceed 5"],
-      default: 0,
+      default: 1,
     },
     linkedInProfile: {
       type: String,
-      validate: {
-        validator: function (v) {
-          return /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/.test(v);
-        },
-        message: "Invalid LinkedIn profile URL",
-      },
       default: "",
     },
   },
