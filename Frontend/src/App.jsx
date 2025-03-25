@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import CompanyJobs from './Pages/CompanyJobs';
 import ApplicantJob from './Components/ApplicantJob/ApplicantJob';
 import AppliedJobs from './Pages/AppliedJobs';
+import ListCompanies from './Pages/ListCompanies';
 
 function App() {
 
@@ -55,6 +56,9 @@ function App() {
         <Route path="/job/:id" element={<JobDetail />} />
         {currentUser?.role === "company" && (
           <Route path="/get-my-job/:id" element={<CompanyJobs />} />
+        )}
+        {currentUser?.isAdmin && (
+          <Route path="/getallcompanies" element={<ListCompanies />} />
         )}
         {currentUser?.role === "company" && (
           <Route path="/myjobdetail/:id" element={<ApplicantJob />} />

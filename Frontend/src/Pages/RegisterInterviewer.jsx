@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Mail, Lock, Phone, Briefcase, Calendar, Clock, Linkedin } from "lucide-react";
+import { User, Mail, Lock, Phone, Briefcase, Calendar, Linkedin } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
