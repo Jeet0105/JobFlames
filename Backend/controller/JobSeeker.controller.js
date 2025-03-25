@@ -291,16 +291,29 @@ export const registerInterviewer = async (req, res) => {
 
 export const getAllCompany = async (req, res) => {
   try {
-      if (!req.user.isAdmin) {
-          return res.status(403).json({ message: "Unauthorized: Only admins can access this." });
-      }
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ message: "Unauthorized: Only admins can access this." });
+    }
 
-      // Fetch all companies, sorted by newest first
-      const companies = await Company.find().select("-password").sort({ createdAt: -1 });
+    // Fetch all companies, sorted by newest first
+    const companies = await Company.find().select("-password").sort({ createdAt: -1 });
 
-      return res.status(200).json({ count: companies.length, companies });
+    return res.status(200).json({ count: companies.length, companies });
   } catch (err) {
-      console.error("Error fetching companies:", err);
-      return res.status(500).json({ message: "Internal server error. Please try again later." });
+    console.error("Error fetching companies:", err);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ message: "Unauthorized: Only admins can access this." });
+    }
+    const users = await JobSeeker.find().select("-password").sort({ createdAt: -1 });
+    return res.status(200).json({ count: users.length, users });
+  } catch (error) {
+    console.error("Error fetching users:", err);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 };

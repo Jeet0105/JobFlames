@@ -35,6 +35,11 @@ function ProfileSidebar() {
                     <SidebarItem to="/getallcompanies" icon={HiUser} text="Get Companies" />
                 )}
 
+                {/* Get Users - Only for Admins */}
+                {currentUser?.isAdmin && (
+                    <SidebarItem to="/getallusers" icon={HiUser} text="Get Users" />
+                )}
+
                 {/* Register Interviewer - Only for Admins */}
                 {currentUser?.isAdmin && (
                     <SidebarItem to="/registerinterviewer" icon={HiUser} text="Register Interviewer" />
