@@ -41,7 +41,11 @@ export const login = async (req, res) => {
             .status(200)
             .cookie("access_token", token, {
                 httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 5 * 60 * 60 * 1000
             })
+            
             .json({ ...rest, role });
 
     } catch (error) {

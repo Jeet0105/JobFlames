@@ -30,19 +30,19 @@ function AccessAccount() {
                 //Regristration
                 if (isJobSeeker) {
                     //Job Seeker
-                    const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/register`, { email, password,name,contact_no }, { withCredentials: true });
+                    const res = await axios.post(`http://localhost:3000/api/v1/user/register`, { email, password,name,contact_no }, { withCredentials: true });
                     console.log(res.data);
                     setIsMoved(false);
                 } else {
                     //Company
-                    const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/company/register`, { email, password,name,contact_no }, { withCredentials: true });
+                    const res = await axios.post(`http://localhost:3000/api/v1/company/register`, { email, password,name,contact_no }, { withCredentials: true });
                     console.log(res.data);
                     setIsMoved(false);
                 }
             }
             else {
                 //Login
-                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/login`, { email, password }, { withCredentials: true });
+                const res = await axios.post(`http://localhost:3000/api/v1/user/login`, { email, password }, { withCredentials: true });
                 console.log(res.data);
                 if (res?.status === 200){
                     toast.success(res?.data?.message);

@@ -31,6 +31,10 @@ const jobSeekerSchema = new mongoose.Schema({
         unique: true,
         match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"]
     },
+    resume_url: {
+        type: String,
+        default: "a"
+    },
     experience: {
         type: String,
         default: "0"
