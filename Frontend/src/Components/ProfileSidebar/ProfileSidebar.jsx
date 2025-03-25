@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiUser, HiBriefcase, HiClipboardList, HiArrowSmRight } from "react-icons/hi";
+import { HiUser, HiBriefcase, HiArrowSmRight } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { signoutSuccess } from "../../Redux/user/userSlice";
@@ -40,9 +40,12 @@ function ProfileSidebar() {
                     <SidebarItem to={`/get-my-job/${currentUser?._id}`} icon={HiBriefcase} text="Listed Jobs" />
                 )}
 
-                {/* createjob */}
+                {/* createjob - Only for company */}
                 {currentUser?.role === "company" && (
                     <SidebarItem to='/createjob' icon={HiBriefcase} text="Create Jobs" />
+                )}
+                {currentUser?.role === "jobseeker" && (
+                    <SidebarItem to='/getappiedjobs' icon={HiBriefcase} text="Applied Jobs" />
                 )}
                 {/* Sign Out */}
                 <button 

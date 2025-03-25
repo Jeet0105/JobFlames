@@ -3,6 +3,7 @@ import JobSeeker from '../model/JobSeeker.model.js';
 import Job from '../model/Job.modem.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import Interviewer from '../model/Interviewer.model.js';
+import Application from '../model/Application.model.js'
 
 export const register = async (req, res) => {
   try {
@@ -248,3 +249,41 @@ export const registerInterviewer = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getAppliedJobs = async (req, res) => {
+  const id = req.user.id;
+
+  try {
+    const applications = await Application.find({ applicant_id: id })
+      .populate({
+        path: "job_id",
+        select: "title location company_id", // Include company_id for further population
+        populate: {
+          path: "company_id",
+          select: "name", // Get company name
+        },
+      })
+      .sort({ createdAt: -1 }); // Sort by most recent applications
+
+    if (applications.length === 0) {
+      return res.status(404).json({ message: "You have not applied for any jobs yet." });
+    }
+
+    // Format response
+    const appliedJobs = applications.map(app => ({
+      applicationId: app._id,
+      jobTitle: app.job_id?.title || "Unknown Job",
+      company: app.job_id?.company_id?.name || "Unknown Company", // Fetch company name
+      location: app.job_id?.location || "Location not specified",
+      status: app.status, 
+      appliedAt: app.createdAt,
+    }));
+
+    return res.status(200).json({ count: appliedJobs.length, jobs: appliedJobs });
+
+  } catch (error) {
+    console.error("Error fetching applied jobs:", error);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+};
+

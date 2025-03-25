@@ -16,6 +16,7 @@ import RegisterInterviewer from './Pages/RegisterInterviewer';
 import { useSelector } from 'react-redux';
 import CompanyJobs from './Pages/CompanyJobs';
 import ApplicantJob from './Components/ApplicantJob/ApplicantJob';
+import AppliedJobs from './Pages/AppliedJobs';
 
 function App() {
 
@@ -57,6 +58,9 @@ function App() {
         )}
         {currentUser?.role === "company" && (
           <Route path="/myjobdetail/:id" element={<ApplicantJob />} />
+        )}
+        {currentUser?.role === "jobseeker" && (
+          <Route path='/getappiedjobs' element={<AppliedJobs />} />
         )}
       </Routes>
       <Footer />
