@@ -12,9 +12,9 @@ function ProfileSidebar() {
 
     const handleSignout = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/company/logout`, { withCredentials: true });
+            const res = await axios.get("http://localhost:3000/api/v1/company/logout", { withCredentials: true });
             if (res.status === 200) {
-                toast.success(res?.data?.message);
+                toast.success(res?.data?.message || "Logged out successfully!");
                 dispatch(signoutSuccess());
                 navigate('/auth');
             }
@@ -25,7 +25,7 @@ function ProfileSidebar() {
     };
 
     return (
-        <aside className="w-full bg-gray-900 text-white h-full p-4">
+        <aside className="w-64 bg-gray-900 text-white min-h-screen p-4">
             <nav className="space-y-2">
                 {/* Profile */}
                 <SidebarItem to="/profile/JobSeeker" icon={HiUser} text="Profile" label={currentUser?.isAdmin ? "Admin" : "User"} />
@@ -35,17 +35,23 @@ function ProfileSidebar() {
                     <SidebarItem to="/registerinterviewer" icon={HiUser} text="Register Interviewer" />
                 )}
 
-                {/* Job Listings */}
-                <SidebarItem to="/profile?tab=jobs" icon={HiBriefcase} text="Job Listings" />
+                {/* Job Listings - Only for Company */}
+                {currentUser?.role === "company" && (
+                    <SidebarItem to={`/get-my-job/${currentUser?._id}`} icon={HiBriefcase} text="Listed Jobs" />
+                )}
 
-                {/* Applications */}
-                <SidebarItem to="/profile?tab=applications" icon={HiClipboardList} text="Applications" />
-
+                {/* createjob */}
+                {currentUser?.role === "company" && (
+                    <SidebarItem to='/createjob' icon={HiBriefcase} text="Create Jobs" />
+                )}
                 {/* Sign Out */}
-                <div onClick={handleSignout} className="flex items-center p-3 cursor-pointer hover:bg-gray-800 rounded-lg">
+                <button 
+                    onClick={handleSignout} 
+                    className="flex items-center w-full p-3 rounded-lg hover:bg-gray-800 transition"
+                >
                     <HiArrowSmRight className="w-5 h-5 mr-3" />
                     <span>Sign Out</span>
-                </div>
+                </button>
             </nav>
         </aside>
     );
@@ -56,7 +62,9 @@ function SidebarItem({ to, icon: Icon, text, label }) {
         <NavLink
             to={to}
             className={({ isActive }) =>
-                `flex items-center p-3 rounded-lg transition ${isActive ? "bg-blue-600" : "hover:bg-gray-800"}`
+                `flex items-center p-3 rounded-lg transition ${
+                    isActive ? "bg-blue-600 text-white" : "hover:bg-gray-800 text-gray-300"
+                }`
             }
         >
             <Icon className="w-5 h-5 mr-3" />

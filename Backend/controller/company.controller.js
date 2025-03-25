@@ -88,3 +88,19 @@ export const createJob = async (req, res) => {
         return res.status(500).json({ message: "Something went wrong. Please try again later." });
     }
 };
+
+export const getMyJob = async (req, res) => {
+    const { id } = req.params;    
+    try {
+        const myJob = await Job.find({ company_id: id });
+        
+        if (myJob.length === 0) {
+            return res.status(404).json({ message: "No jobs found for this company." });
+        }
+
+        return res.status(200).json(myJob);
+    } catch (error) {
+        console.error("Error fetching jobs:", error);
+        return res.status(500).json({ message: "Something went wrong. Please try again later." });
+    }
+};
