@@ -317,3 +317,42 @@ export const getAllUsers = async (req, res) => {
     return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 };
+
+export const getAllApplication = async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ message: "Unauthorized: Only admins can access this." });
+    }
+
+    const applications = await Application.find()
+      .populate({
+        path: "job_id",
+        select: "title company_id",
+        populate: {
+          path: "company_id",
+          select: "name",
+        },
+      })
+      .populate({
+        path: "applicant_id",
+        select: "name email contact_no",
+      })
+      .sort({ createdAt: -1 });
+
+    if (!applications.length) {
+      return res.status(200).json({
+        message: "No applications found",
+        data: [],
+        count: 0,
+      });
+    }
+
+    return res.status(200).json({
+      count: applications.length,
+      applications,
+    });
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+};
