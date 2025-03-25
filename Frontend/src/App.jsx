@@ -20,6 +20,7 @@ import AppliedJobs from './Pages/AppliedJobs';
 import ListCompanies from './Pages/ListCompanies';
 import ListUsers from './Pages/ListUsers';
 import ListApplications from './Pages/ListApplications';
+import ListJobs from './Pages/ListJobs';
 
 function App() {
 
@@ -67,6 +68,9 @@ function App() {
         )}
         {currentUser?.isAdmin && (
           <Route path="/getallapplications" element={<ListApplications />} />
+        )}
+        {currentUser?.isAdmin && (
+          <Route path="/getalljobs" element={<ListJobs />} />
         )}
         {currentUser?.role === "company" && (
           <Route path="/myjobdetail/:id" element={<ApplicantJob />} />

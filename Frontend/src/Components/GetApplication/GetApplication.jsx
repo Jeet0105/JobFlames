@@ -15,7 +15,6 @@ function GetApplications() {
                 const response = await axios.get("http://localhost:3000/api/v1/user/getallapplication", {
                     withCredentials: true,
                 });
-                console.log(response.data.applications);
                 setApplications(response.data.applications);
                 setFilteredApplications(response.data.applications);
             } catch (err) {
@@ -47,7 +46,7 @@ function GetApplications() {
         <div className="min-h-screen p-6">
             <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Job Applications</h2>
 
-            {/* Search Bar - Matching the companies component style */}
+            {/* Search Bar */}
             <div className="mb-6 flex justify-center">
                 <div className="relative w-full max-w-md">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -71,9 +70,8 @@ function GetApplications() {
                 </p>
             )}
 
-            {/* Display total count - matching companies component */}
             {!loading && !error && filteredApplications.length > 0 && (
-                <p className="text-lg font-semibold text-blue text-center mb-4">
+                <p className="text-lg font-semibold text-blue-600 text-center mb-4">
                     Showing {filteredApplications.length} of {applications.length} applications
                 </p>
             )}
@@ -129,9 +127,9 @@ function GetApplications() {
                                     {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "N/A"}
                                 </td>
                                 <td className="py-4 px-4 text-center text-black">
-                                    {app.resume && app.resume !== 'a' ? (
+                                    {(app.resume || (app.applicant_id?.resume_url && app.applicant_id.resume_url !== 'a')) ? (
                                         <a
-                                            href={app.resume}
+                                            href={app.resume || app.applicant_id.resume_url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-blue-500 hover:underline flex items-center justify-center"

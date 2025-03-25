@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllApplication, getAllCompany, getAllJobs, getAllUsers, getAppliedJobs, getJobDetail, register, registerInterviewer, updateJobSeekers } from "../controller/JobSeeker.controller.js";
+import { getAdminAllJobs, getAllApplication, getAllCompany, getAllJobs, getAllUsers, getAppliedJobs, getJobDetail, register, registerInterviewer, updateJobSeekers } from "../controller/JobSeeker.controller.js";
 import { login, logout } from "../controller/auth.controller.js";
 import { verifyToken } from '../utils/verifyUser.js';
 import {uploadMiddleware} from '../middleware/upload.middleware.js';
@@ -20,5 +20,6 @@ router.post("/registerinterviewer",verifyToken,registerInterviewer);
 router.get("/getallcompanies",verifyToken,getAllCompany);
 router.get("/getallusers",verifyToken,getAllUsers);
 router.get("/getallapplication",verifyToken,getAllApplication);
+router.get("/getalladminjobs",verifyToken,getAdminAllJobs);
 
 export default router;

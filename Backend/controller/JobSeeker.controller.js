@@ -335,7 +335,7 @@ export const getAllApplication = async (req, res) => {
       })
       .populate({
         path: "applicant_id",
-        select: "name email contact_no",
+        select: "name email contact_no resume_url",
       })
       .sort({ createdAt: -1 });
 
@@ -354,5 +354,47 @@ export const getAllApplication = async (req, res) => {
   } catch (error) {
     console.error("Error fetching applications:", error);
     return res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+};
+
+export const getAdminAllJobs = async (req, res) => {
+  try {
+    // Verify admin access
+    if (!req.user?.isAdmin) {
+      return res.status(403).json({ 
+        success: false,
+        message: "Unauthorized: Only admins can access this resource" 
+      });
+    }
+
+    // Get all jobs with populated company details
+    const jobs = await Job.find()
+      .populate({
+        path: "company_id",
+        select: "name email logo contact_no", // Include essential company info
+      })
+      .sort({ createdAt: -1 }) // Sort by newest first
+
+    if (!jobs.length) {
+      return res.status(200).json({
+        success: true,
+        message: "No jobs found",
+        data: [],
+        count: 0
+      });
+    }
+
+    return res.status(200).json({
+      count: jobs.length,
+      jobs
+    });
+
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return res.status(500).json({ 
+      success: false,
+      message: "Internal server error",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
