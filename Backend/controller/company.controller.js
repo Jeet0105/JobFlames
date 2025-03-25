@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import Company from "../model/Company.model.js";
 import Job from '../model/Job.modem.js';
+import Application from '../model/Application.model.js';
 
 export const register = async (req, res) => {
     const { name, email, password, contact_no } = req.body;
@@ -102,5 +103,47 @@ export const getMyJob = async (req, res) => {
     } catch (error) {
         console.error("Error fetching jobs:", error);
         return res.status(500).json({ message: "Something went wrong. Please try again later." });
+    }
+};
+
+export const getApplicantsForJob = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const applications = await Application.find({ job_id: id })
+            .populate({
+                path: "applicant_id",
+                select: "name email profilePicture resume_url contact_no experience"
+            })
+            .select("status resume createdAt")
+            .sort({ createdAt: -1 }); // Sort by newest applications first
+
+        if (!applications.length) {
+            return res.status(404).json({ message: "No applications found for this job." });
+        }
+
+        // Format the response more safely with null checks
+        const formattedApplicants = applications.map(app => ({
+            applicationId: app._id, // Include application ID for reference
+            name: app.applicant_id?.name || "Not available",
+            email: app.applicant_id?.email || "Not available",
+            profilePicture: app.applicant_id?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
+            resume: app.resume || app.applicant_id?.resume_url || "No resume available",
+            contact_no: app.applicant_id?.contact_no || "Not provided",
+            experience: app.applicant_id?.experience || "Not specified",
+            status: app.status,
+            appliedAt: app.createdAt
+        }));
+
+        res.status(200).json({
+            count: formattedApplicants.length,
+            applicants: formattedApplicants
+        });
+    } catch (error) {
+        console.error("Error fetching job applicants:", error);
+        res.status(500).json({ 
+            message: "Internal server error.",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom"; // Import `useNavigate`
+import { useParams, useNavigate } from "react-router-dom";
 import { Loader2, Briefcase, MapPin, DollarSign, Calendar, Clock } from "lucide-react";
 
 function GetCompanyJob() {
     const { id } = useParams();
-    const navigate = useNavigate(); // 👈 Initialize `useNavigate`
+    const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
