@@ -1,42 +1,29 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import AccessAccount from "./Components/AccessAccount/AccessAccount";
-import Header from "./Components/header/header";
-import Footer from "./Components/footer/footer";
-import Home from "./Pages/Home";
-import About from "./Pages/About";
-import Contact from "./Pages/Contact";
-import CreateJob from "./Pages/CreateJob";
-import ShowJobs from "./Pages/ShowJob";
-import Profile from "./Pages/Profile";
-import JobSeekerInfo from "./Components/JobSeekerInfo/JobSeekerInfo";
-import JobDetail from "./Pages/JobDetail";
-import EditProfile from "./Components/Edit-Profile/EditProfile";
-import CompanyInfo from "./Components/CompanyInfo/CompanyInfo";
-import RegisterInterviewer from "./Pages/RegisterInterviewer";
-import CompanyJobs from "./Pages/CompanyJobs";
-import ApplicantJob from "./Components/ApplicantJob/ApplicantJob";
-import AppliedJobs from "./Pages/AppliedJobs";
-import ListCompanies from "./Pages/ListCompanies";
-import ListUsers from "./Pages/ListUsers";
-import ListApplications from "./Pages/ListApplications";
-import ListJobs from "./Pages/ListJobs";
-
-function ProtectedRoute({ children, role }) {
-  const currentUser = useSelector((state) => state.user.currentUser);
-
-  if (!currentUser) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  if (role && currentUser.role !== role) {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
-}
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AccessAccount from './Components/AccessAccount/AccessAccount';
+import Header from './Components/header/header';
+import Footer from './Components/footer/footer';
+import Home from './Pages/Home'
+import About from './Pages/About';
+import Contact from './Pages/Contact';
+import CreateJob from './Pages/CreateJob';
+import ShowJobs from './Pages/ShowJob';
+import Profile from './Pages/Profile';
+import JobSeekerInfo from './Components/JobSeekerInfo/JobSeekerInfo';
+import JobDetail from './Pages/JobDetail';
+import EditProfile from './Components/Edit-Profile/EditProfile';
+import CompanyInfo from './Components/CompanyInfo/CompanyInfo';
+import RegisterInterviewer from './Pages/RegisterInterviewer';
+import { useSelector } from 'react-redux';
+import CompanyJobs from './Pages/CompanyJobs';
+import ApplicantJob from './Components/ApplicantJob/ApplicantJob';
+import AppliedJobs from './Pages/AppliedJobs';
+import ListCompanies from './Pages/ListCompanies';
+import ListUsers from './Pages/ListUsers';
+import ListApplications from './Pages/ListApplications';
+import ListJobs from './Pages/ListJobs';
 
 function App() {
+
   const currentUser = useSelector((state) => state.user.currentUser);
 
   return (
@@ -44,44 +31,52 @@ function App() {
       <Header />
       <Routes>
         <Route path="/auth" element={<AccessAccount />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/job/:id" element={<JobDetail />} />
-
-        {/* Protected Routes */}
-        <Route path="/showjob" element={<ProtectedRoute role="jobseeker"><ShowJobs /></ProtectedRoute>} />
-        <Route path="/createjob" element={<ProtectedRoute role="company"><CreateJob /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-
-        <Route path="/profile" element={<Profile />}>
-          <Route path="JobSeeker" element={<ProtectedRoute role="jobseeker"><JobSeekerInfo /></ProtectedRoute>} />
-          <Route path="Company" element={<ProtectedRoute role="company"><CompanyInfo /></ProtectedRoute>} />
-          <Route path="edit-profile/:id" element={<EditProfile />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/createjob' element={<CreateJob />} />
+        <Route path='/showjob' element={<ShowJobs />} />
+        <Route path='/profile' element={<Profile />} >
+          {currentUser?.role === "jobseeker" ?
+            <Route index element={<Navigate to="JobSeeker" />} />
+            :
+            <Route index element={<Navigate to="Company" />} />
+          }
+          <Route path='JobSeeker' element={<JobSeekerInfo />} />
+          <Route path='Company' element={<CompanyInfo />} />
+          <Route path='edit-profile/:id' element={<EditProfile />} />
         </Route>
-
-        {/* Admin-Only Routes */}
-        {currentUser?.isAdmin && (
-          <>
-            <Route path="/registerinterviewer" element={<RegisterInterviewer />} />
-            <Route path="/getallcompanies" element={<ListCompanies />} />
-            <Route path="/getallusers" element={<ListUsers />} />
-            <Route path="/getallapplications" element={<ListApplications />} />
-            <Route path="/getalljobs" element={<ListJobs />} />
-          </>
-        )}
-
-        {/* Company-Only Routes */}
+        <Route
+          path="/registerinterviewer"
+          element={
+            currentUser && currentUser.isAdmin ? (
+              <RegisterInterviewer />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          }
+        />
+        <Route path="/job/:id" element={<JobDetail />} />
         {currentUser?.role === "company" && (
-          <>
-            <Route path="/get-my-job/:id" element={<CompanyJobs />} />
-            <Route path="/myjobdetail/:id" element={<ApplicantJob />} />
-          </>
+          <Route path="/get-my-job/:id" element={<CompanyJobs />} />
         )}
-
-        {/* Job Seeker-Only Routes */}
+        {currentUser?.isAdmin && (
+          <Route path="/getallcompanies" element={<ListCompanies />} />
+        )}
+        {currentUser?.isAdmin && (
+          <Route path="/getallusers" element={<ListUsers />} />
+        )}
+        {currentUser?.isAdmin && (
+          <Route path="/getallapplications" element={<ListApplications />} />
+        )}
+        {currentUser?.isAdmin && (
+          <Route path="/getalljobs" element={<ListJobs />} />
+        )}
+        {currentUser?.role === "company" && (
+          <Route path="/myjobdetail/:id" element={<ApplicantJob />} />
+        )}
         {currentUser?.role === "jobseeker" && (
-          <Route path="/getappliedjobs" element={<AppliedJobs />} />
+          <Route path='/getappiedjobs' element={<AppliedJobs />} />
         )}
       </Routes>
       <Footer />
