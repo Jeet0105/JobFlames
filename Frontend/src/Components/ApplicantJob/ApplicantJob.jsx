@@ -18,7 +18,6 @@ function ApplicantJob() {
                 });
                 setApplicants(response.data.applicants);
             } catch (err) {
-                console.log(err);
                 setError(err.response?.data?.message || "Failed to fetch applicants.");
             } finally {
                 setLoading(false);
@@ -28,21 +27,20 @@ function ApplicantJob() {
         fetchApplicants();
     }, [id]);
 
-    // Update application status (Shortlist / Reject)
     const updateStatus = async (applicantId, newStatus) => {
         try {
-            // const response = await axios.put(
-            //     `http://localhost:3000/api/v1/company/update-status/${applicantId}`,
-            //     { status: newStatus },
-            //     { withCredentials: true }
-            // );
+            const response = await axios.put(
+                `http://localhost:3000/api/v1/company/update-status/${applicantId}`,
+                { status: newStatus },
+                { withCredentials: true }
+            );
 
             setApplicants((prevApplicants) =>
                 prevApplicants.map((app) =>
                     app.applicationId === applicantId ? { ...app, status: newStatus } : app
                 )
             );
-            //toast.success(response.data.message);
+            toast.success(response.data.message);
         } catch (err) {
             toast.error(err.response?.data?.message || "Failed to update status.");
         }
@@ -90,18 +88,18 @@ function ApplicantJob() {
                                 </td>
                                 <td className="py-4 px-4 flex gap-2 justify-center">
                                     <button 
-                                        className="flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition"
+                                        className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition disabled:opacity-50"
                                         onClick={() => updateStatus(app.applicationId, "shortlisted")}
-                                        disabled={app.status === "shortlisted"}
+                                        disabled={app.status !== "applied"}
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Shortlist
                                     </button>
 
                                     <button 
-                                        className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
+                                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition disabled:opacity-50"
                                         onClick={() => updateStatus(app.applicationId, "rejected")}
-                                        disabled={app.status === "rejected"}
+                                        disabled={app.status !== "applied"}
                                     >
                                         <XCircle className="w-4 h-4" />
                                         Reject

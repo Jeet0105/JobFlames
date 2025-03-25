@@ -47,7 +47,6 @@ export const register = async (req, res) => {
     }
 };
 
-
 export const createJob = async (req, res) => {
     const { title, description, location, salary_expected, experience, job_type, skills_required } = req.body;
     const company_id = req.user?.id;
@@ -91,10 +90,10 @@ export const createJob = async (req, res) => {
 };
 
 export const getMyJob = async (req, res) => {
-    const { id } = req.params;    
+    const { id } = req.params;
     try {
         const myJob = await Job.find({ company_id: id });
-        
+
         if (myJob.length === 0) {
             return res.status(404).json({ message: "No jobs found for this company." });
         }
@@ -141,9 +140,40 @@ export const getApplicantsForJob = async (req, res) => {
         });
     } catch (error) {
         console.error("Error fetching job applicants:", error);
-        res.status(500).json({ 
+        res.status(500).json({
             message: "Internal server error.",
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
+    }
+};
+
+export const changeStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    // Validate if the provided status is allowed
+    const allowedStatuses = ["applied", "shortlisted", "interview", "hired", "rejected"];
+    if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({ message: "Invalid status value provided." });
+    }
+
+    try {
+        const updatedApplication = await Application.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
+
+        if (!updatedApplication) {
+            return res.status(404).json({ message: "Application not found." });
+        }
+
+        res.status(200).json({ 
+            message: `Application status updated to ${status}.`,
+            application: updatedApplication
+        });
+    } catch (error) {
+        console.error("Error updating application status:", error);
+        res.status(500).json({ message: "Internal server error." });
     }
 };
