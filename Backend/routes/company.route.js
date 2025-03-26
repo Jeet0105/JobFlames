@@ -1,6 +1,6 @@
 import express from 'express';
 import { createJob, register, updateCompany } from '../controller/company.controller.js';
-import { changeStatus, createJob, getApplicantsForJob, getMyJob, register } from '../controller/company.controller.js';
+import { changeStatus, getApplicantsForJob, getMyJob } from '../controller/company.controller.js';
 import { login, logout } from '../controller/auth.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 import { uploadMiddleware } from '../middleware/upload.middleware.js';

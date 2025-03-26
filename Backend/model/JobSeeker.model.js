@@ -13,7 +13,7 @@ const jobSeekerSchema = new mongoose.Schema({
     },
     rating: { 
         type: Number, 
-        min: 1, 
+        min: 0, 
         max: 5, 
         default: 0 
     },
@@ -33,7 +33,7 @@ const jobSeekerSchema = new mongoose.Schema({
     },
     resume_url: {
         type: String,
-        default: "a"
+        default: "No Resume Url"
     },
     experience: {
         type: String,
@@ -56,6 +56,9 @@ const jobSeekerSchema = new mongoose.Schema({
     password:{
         type: String,
         required: true
+    },
+    interview_join_url : {
+        type : String
     }
 },{timestamps:true});
 

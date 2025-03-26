@@ -226,13 +226,14 @@ export const getApplicantsForJob = async (req, res) => {
 
     try {
         const applications = await Application.find({ job_id: id })
-            .populate({
-                path: "applicant_id",
-                select: "name email profilePicture resume_url contact_no experience"
-            })
-            .select("status resume createdAt")
-            .sort({ createdAt: -1 }); // Sort by newest applications first
-
+        .populate({
+            path: "applicant_id",
+            select: "name email profilePicture resume_url contact_no experience"
+        })
+        .select("status resume createdAt")
+        .sort({ createdAt: -1 }); // Sort by newest applications first
+        
+        console.log('applications: ', applications);
         if (!applications.length) {
             return res.status(404).json({ message: "No applications found for this job." });
         }

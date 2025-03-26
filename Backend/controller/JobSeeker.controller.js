@@ -340,7 +340,7 @@ export const getAllApplication = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (!applications.length) {
-      return res.status(200).json({
+      return res.status(400).json({
         message: "No applications found",
         data: [],
         count: 0,

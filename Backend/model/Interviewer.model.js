@@ -40,7 +40,7 @@ const interviewerSchema = new mongoose.Schema(
     linkedInProfile: {
       type: String,
       default: "",
-    },
+    }
   },
   { timestamps: true }
 );

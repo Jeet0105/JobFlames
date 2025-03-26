@@ -17,6 +17,7 @@ export const apply = async (req, res) => {
         }
 
         const jobseeker = await JobSeeker.findById(jobseeker_id);
+        console.log('jobseeker: ', jobseeker);
         if (!jobseeker) {
             return res.status(404).json({ message: "Job seeker not found" });
         }

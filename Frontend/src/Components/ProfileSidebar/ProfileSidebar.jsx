@@ -25,10 +25,10 @@ function ProfileSidebar() {
     };
 
     return (
-        <aside className="w-64 bg-gray-900 text-white min-h-screen p-4">
+        <aside className="w-64 bg-gray-900 text-white min-h-[100%] p-4">
             <nav className="space-y-2">
                 {/* Profile */}
-                <SidebarItem to="/profile/JobSeeker" icon={HiUser} text="Profile" label={currentUser?.isAdmin ? "Admin" : "User"} />
+                <SidebarItem to={currentUser?.role === "jobseeker" ? "/profile/JobSeeker" : "/profile/Company"} icon={HiUser} text="Profile" label={currentUser?.role === "jobseeker" ? currentUser?.isAdmin ? "Admin" : "User" : "Company"} />
 
                 {/* Get Companies - Only for Admins */}
                 {currentUser?.isAdmin && (
@@ -45,7 +45,7 @@ function ProfileSidebar() {
                     <SidebarItem to="/getalljobs" icon={HiUser} text="Get Jobs" />
                 )}
 
-                {/* Get pplication - Only for Admins */}
+                {/* Get application - Only for Admins */}
                 {currentUser?.isAdmin && (
                     <SidebarItem to="/getallapplications" icon={HiUser} text="Get Applications" />
                 )}
@@ -64,7 +64,7 @@ function ProfileSidebar() {
                 {currentUser?.role === "company" && (
                     <SidebarItem to='/createjob' icon={HiBriefcase} text="Create Jobs" />
                 )}
-                {currentUser?.role === "jobseeker" && (
+                {currentUser?.role === "jobseeker" && !currentUser?.isAdmin && (
                     <SidebarItem to='/getappiedjobs' icon={HiBriefcase} text="Applied Jobs" />
                 )}
                 {/* Sign Out */}

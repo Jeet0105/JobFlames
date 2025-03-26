@@ -46,6 +46,9 @@ function ApplicantJob() {
         }
     };
 
+
+    console.log(applicants)
+
     return (
         <div className="min-h-screen p-6">
             <h2 className="text-3xl font-bold text-blue text-center mb-6">Job Applicants</h2>
@@ -79,7 +82,7 @@ function ApplicantJob() {
                                 </td>
                                 <td className="py-4 px-4 text-center text-black">{app.experience} years</td>
                                 <td className="py-4 px-4 text-center">
-                                    <a href={app.resume} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center justify-center">
+                                    <a href={app.resume_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center cursor-pointer justify-center">
                                         <FileText className="mr-1" /> View
                                     </a>
                                 </td>
