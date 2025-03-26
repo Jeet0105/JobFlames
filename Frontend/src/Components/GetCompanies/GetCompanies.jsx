@@ -16,6 +16,7 @@ function GetCompanies() {
                     withCredentials: true,
                 });
                 setCompanies(response.data.companies);
+                console.log(response.data.companies);
                 setFilteredCompanies(response.data.companies);
             } catch (err) {
                 console.error(err);

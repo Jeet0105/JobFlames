@@ -17,6 +17,8 @@ function GetApplications() {
                 });
                 setApplications(response.data.applications);
                 setFilteredApplications(response.data.applications);
+                console.log(response.data.applications);
+                
             } catch (err) {
                 console.error(err);
                 setError(err.response?.data?.message || "Failed to fetch applications.");

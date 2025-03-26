@@ -297,7 +297,7 @@ export const getAllCompany = async (req, res) => {
 
     // Fetch all companies, sorted by newest first
     const companies = await Company.find().select("-password").sort({ createdAt: -1 });
-
+    console.log(companies);
     return res.status(200).json({ count: companies.length, companies });
   } catch (err) {
     console.error("Error fetching companies:", err);
