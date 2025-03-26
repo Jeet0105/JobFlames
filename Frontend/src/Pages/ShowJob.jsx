@@ -67,9 +67,9 @@ function ShowJobs() {
       ) : filteredJobs.length === 0 ? (
         <p className="text-center text-[#254A74] font-bold text-xl">No jobs found.</p>
       ) : (
-        <div className="flex gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {filteredJobs.map((job) => (
-            <div key={job._id} className="w-full md:w-[45%] lg:w-[30%] p-5 bg-[#1b3453] shadow-lg rounded-xl text-white">
+            <div key={job._id} className="m-4 p-5 bg-[#1b3453] shadow-lg rounded-xl text-white">
               {/* Job Title */}
               <h3 className="text-xl font-semibold">{job.title}</h3>
               
