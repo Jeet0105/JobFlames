@@ -74,7 +74,7 @@ function Header() {
                         <div className="relative" ref={dropdownRef}>
                             <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center focus:outline-none space-x-4 p-3 rounded-lg shadow-md cursor-pointer  transition duration-300">
                                 <img
-                                    src={currentUser?.role === 'jobseeker' ? currentUser?.profilePicture : currentUser?.logo}
+                                    src={currentUser?.role === 'jobseeker' || currentUser?.role === 'interviewer' ? currentUser?.profilePicture : currentUser?.logo}
                                     alt={currentUser?.name}
                                     className="w-12 h-12 rounded-full object-cover border-2 border-gray-500 cursor-pointer"
                                 />

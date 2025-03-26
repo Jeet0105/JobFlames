@@ -62,10 +62,10 @@ function GetApplications() {
                 </div>
             </div>
 
-            {loading && <Loader2 className="animate-spin text-blue-500 h-10 w-10 mx-auto" />}
-            {error && <p className="text-red-600 text-center">{error}</p>}
+            {loading && <Loader2 className="animate-spin text-blue-500 h-10 w-10 mx-auto mb-2" />}
+            {error && <p className="text-red-600 text-center mb-2">{error}</p>}
             {!loading && !error && filteredApplications.length === 0 && (
-                <p className="text-gray-500 text-center">
+                <p className="text-gray-500 text-center mb-2">
                     {searchTerm ? "No matching applications found" : "No applications found."}
                 </p>
             )}
@@ -127,9 +127,9 @@ function GetApplications() {
                                     {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "N/A"}
                                 </td>
                                 <td className="py-4 px-4 text-center text-black">
-                                    {(app.resume || (app.applicant_id?.resume_url && app.applicant_id.resume_url !== 'a')) ? (
+                                    {(app.resume || (app.applicant_id?.resumeUrl && app.applicant_id.resumeUrl !== 'a')) ? (
                                         <a
-                                            href={app.resume || app.applicant_id.resume_url}
+                                            href={app.resume || app.applicant_id.resumeUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-blue-500 hover:underline flex items-center justify-center"
@@ -137,7 +137,7 @@ function GetApplications() {
                                             <FileText className="mr-1 h-4 w-4" /> View
                                         </a>
                                     ) : (
-                                        <span className="text-gray-400">Not available</span>
+                                        <span className="text-gray-400 ">Not available</span>
                                     )}
                                 </td>
                             </tr>

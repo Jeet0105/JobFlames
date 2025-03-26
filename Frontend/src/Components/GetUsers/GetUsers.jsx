@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader2, FileText, Link2, Search } from "lucide-react";
+import { FaGithub, FaLink, FaLinkedin } from "react-icons/fa";
 
 function GetJobSeekers() {
     const [jobSeekers, setJobSeekers] = useState([]);
@@ -93,9 +94,9 @@ function GetJobSeekers() {
                         {filteredSeekers.map((seeker) => (
                             <tr key={seeker._id} className="border-b hover:bg-gray-50">
                                 <td className="py-4 px-4 text-center">
-                                    <img 
-                                        src={seeker.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"} 
-                                        alt="Profile" 
+                                    <img
+                                        src={seeker.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"}
+                                        alt="Profile"
                                         className="w-10 h-10 rounded-full mx-auto"
                                         onError={(e) => {
                                             e.target.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png";
@@ -135,23 +136,34 @@ function GetJobSeekers() {
                                     )}
                                 </td>
                                 <td className="py-4 px-4 text-center">
-                                    {seeker.allLinks?.length > 0 ? (
-                                        <div className="flex flex-col gap-1 items-center">
-                                            {seeker.allLinks.slice(0, 2).map((link, index) => (
-                                                <a
-                                                    key={index}
-                                                    href={link.link}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-500 hover:underline flex items-center gap-1"
-                                                >
-                                                    <Link2 className="h-4 w-4" /> 
-                                                    {link.linkLabel || "Link"}
-                                                </a>
-                                            ))}
-                                            {seeker.allLinks.length > 2 && (
+                                    {seeker.AllLinks?.length > 0 ? (
+                                        <div className="flex items-center gap-2">
+                                            {seeker.AllLinks.slice(0, 2).map((link, index) => {
+                                                if (!link?.LinkLabel || !link?.link) return null;
+
+                                                return link.LinkLabel.toLowerCase().includes("github") ? (
+                                                    <a
+                                                        key={index}
+                                                        href={link.link}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <FaGithub className="text-black" />
+                                                    </a>
+                                                ) : link.LinkLabel.toLowerCase().includes("linkedin") ? (
+                                                    <a
+                                                        key={index}
+                                                        href={link.link}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        <FaLinkedin className="text-blue-600" />
+                                                    </a>
+                                                ) : null;
+                                            })}
+                                            {seeker.AllLinks.length > 2 && (
                                                 <span className="text-xs text-gray-500">
-                                                    +{seeker.allLinks.length - 2} more
+                                                    +{seeker.AllLinks.length - 2} more
                                                 </span>
                                             )}
                                         </div>
@@ -159,6 +171,8 @@ function GetJobSeekers() {
                                         <span className="text-black">N/A</span>
                                     )}
                                 </td>
+
+
                             </tr>
                         ))}
                     </tbody>

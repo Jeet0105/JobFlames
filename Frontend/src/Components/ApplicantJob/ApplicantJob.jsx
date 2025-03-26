@@ -72,27 +72,27 @@ function ApplicantJob() {
                     </thead>
                     <tbody>
                         {applicants.map((app) => (
-                            <tr key={app.applicationId} className="border-b">
+                            <tr key={app?.applicationId} className="border-b">
                                 <td className="py-4 px-4 flex items-center">
-                                    <img src={app.profilePicture} alt="Profile" className="w-10 h-10 rounded-full mr-3" />
+                                    <img src={app?.profilePicture} alt="Profile" className="w-10 h-10 rounded-full mr-3" />
                                     <div>
-                                        <p className="font-medium text-gray-800">{app.name}</p>
-                                        <p className="text-gray-500 text-sm">{app.email}</p>
+                                        <p className="font-medium text-gray-800">{app?.name}</p>
+                                        <p className="text-gray-500 text-sm">{app?.email}</p>
                                     </div>
                                 </td>
-                                <td className="py-4 px-4 text-center text-black">{app.experience} years</td>
+                                <td className="py-4 px-4 text-center text-black">{app?.experience} years</td>
                                 <td className="py-4 px-4 text-center">
-                                    <a href={app.resume_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center cursor-pointer justify-center">
+                                    <a href={app?.resume} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center cursor-pointer justify-center">
                                         <FileText className="mr-1" /> View
                                     </a>
                                 </td>
-                                <td className={`py-4 px-4 text-center font-semibold ${app.status === "shortlisted" ? "text-green-600" : app.status === "rejected" ? "text-red-600" : "text-gray-600"}`}>
-                                    {app.status}
+                                <td className={`py-4 px-4 text-center font-semibold ${app?.status === "shortlisted" ? "text-green-600" : app?.status === "rejected" ? "text-red-600" : "text-gray-600"}`}>
+                                    {app?.status}
                                 </td>
                                 <td className="py-4 px-4 flex gap-2 justify-center">
                                     <button 
                                         className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition disabled:opacity-50"
-                                        onClick={() => updateStatus(app.applicationId, "shortlisted")}
+                                        onClick={() => updateStatus(app?.applicationId, "shortlisted")}
                                         disabled={app.status !== "applied"}
                                     >
                                         <CheckCircle className="w-4 h-4" />
@@ -101,8 +101,8 @@ function ApplicantJob() {
 
                                     <button 
                                         className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition disabled:opacity-50"
-                                        onClick={() => updateStatus(app.applicationId, "rejected")}
-                                        disabled={app.status !== "applied"}
+                                        onClick={() => updateStatus(app?.applicationId, "rejected")}
+                                        disabled={app?.status !== "applied"}
                                     >
                                         <XCircle className="w-4 h-4" />
                                         Reject

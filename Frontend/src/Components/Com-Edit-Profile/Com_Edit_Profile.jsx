@@ -58,19 +58,27 @@ function Com_Edit_Profile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file))
-      setFormData({ ...formData, profilePicture: file });
+      if (file?.name?.endsWith(".png") || file?.name?.endsWith(".jpg") || file?.name?.endsWith("jepg")){
+        setImage(URL.createObjectURL(file))
+        setFormData({ ...formData, profilePicture: file });
+      }
+      else{
+        return toast.error("FIle should be of png, jpg, jpeg");
+      }
     }
   };
 
   const handleLinkChange = (index, field, value) => {
-    const updatedLinks = [...formData.AllLinks];
-    updatedLinks[index][field] = value;
-    setFormData({ ...formData, AllLinks: updatedLinks });
+    setFormData((prev) => ({
+      ...prev,
+      AllLinks: prev.AllLinks.map((link, i) =>
+        i === index ? { ...link, [field]: value } : link
+      ),
+    }));
   };
 
   const addNewLink = () => {
-    setFormData({ ...formData, AllLinks: [...formData.AllLinks, { LinkLabel: "", link: "" }] });
+    setFormData({ ...formData, AllLinks: [...formData.AllLinks, { LinkLabel: "", Link: "" }] });
   };
 
   const removeLink = (index) => {
@@ -236,8 +244,8 @@ function Com_Edit_Profile() {
                 <input
                   type="url"
                   placeholder="URL"
-                  value={link.link}
-                  onChange={(e) => handleLinkChange(index, "link", e.target.value)}
+                  value={link.Link}
+                  onChange={(e) => handleLinkChange(index, "Link", e.target.value)}
                   className="w-full md:w-2/3 p-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
                 />
                 <button type="button" onClick={() => removeLink(index)} className="p-3 bg-red-500 text-white rounded-lg hover:bg-red-600">

@@ -40,7 +40,7 @@ function GetCompanyJob() {
                     <div
                         key={job._id}
                         className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer"
-                        onClick={() => navigate(`/myjobdetail/${job._id}`)}
+                        onClick={() => navigate(`/profile/myjobdetail/${job._id}`)}
                     >
                         <h3 className="text-2xl font-bold text-gray-900 flex items-center">
                             <Briefcase className="mr-2 text-blue-600" /> {job.title}

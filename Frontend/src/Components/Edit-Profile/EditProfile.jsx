@@ -35,18 +35,29 @@ function EditProfile() {
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
+      if (file?.name?.endsWith(".png") || file?.name?.endsWith(".jpg") || file?.name?.endsWith("jepg")){
       console.log(file)
         setFormData({ ...formData, [field]: file });
         setImage(URL.createObjectURL(file));
+      }
+      else{
+        return toast.error("File should be png, jpg, jpeg format");
+      }
     }
   };
   const handlePDFChange = (e, field) => {
     const file = e.target.files[0];
     console.log('file: ', file);
+    if (!file?.name.endsWith(".pdf"))
+    {
+      e.target.value = null
+      console.log(formData);
+      return toast.error("Please Enter pdf file")
+    }else{
     if (file) {
         setFormData({ ...formData, [field]: file });
         setPDF(URL.createObjectURL(file));
-    }
+    }}
   };
 
   const handleLinkChange = (index, field, value) => {

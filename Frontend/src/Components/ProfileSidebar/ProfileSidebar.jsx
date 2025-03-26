@@ -28,48 +28,50 @@ function ProfileSidebar() {
         <aside className="w-64 bg-gray-900 text-white min-h-[100%] p-4">
             <nav className="space-y-2">
                 {/* Profile */}
-                <SidebarItem to={currentUser?.role === "jobseeker" ? "/profile/JobSeeker" : "/profile/Company"} icon={HiUser} text="Profile" label={currentUser?.role === "jobseeker" ? currentUser?.isAdmin ? "Admin" : "User" : "Company"} />
+                <SidebarItem to={currentUser?.role === "jobseeker" ? "/profile/JobSeeker" : currentUser?.role === "interviewer" ? "/profile/Interviewer" : "/profile/Company"} icon={HiUser} text="Profile" label={currentUser?.role === "jobseeker" ? (currentUser?.isAdmin ? "Admin" : "User") : currentUser?.role === "interviewer" ? "Interviewer" : "Company" } />
 
                 {/* Get Companies - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/getallcompanies" icon={HiUser} text="Get Companies" />
+                    <SidebarItem to="/profile/getallcompanies" icon={HiUser} text="Get Companies" />
                 )}
 
                 {/* Get Users - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/getallusers" icon={HiUser} text="Get Users" />
+                    <SidebarItem to="/profile/getallusers" icon={HiUser} text="Get Users" />
                 )}
-
+                {currentUser?.isAdmin && (
+                    <SidebarItem to="/profile/getallinterviewers" icon={HiUser} text="Get Interviewer" />
+                )}
                 {/* Get Jobs - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/getalljobs" icon={HiUser} text="Get Jobs" />
+                    <SidebarItem to="/profile/getalljobs" icon={HiUser} text="Get Jobs" />
                 )}
 
                 {/* Get application - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/getallapplications" icon={HiUser} text="Get Applications" />
+                    <SidebarItem to="/profile/getallapplications" icon={HiUser} text="Get Applications" />
                 )}
 
                 {/* Register Interviewer - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/registerinterviewer" icon={HiUser} text="Register Interviewer" />
+                    <SidebarItem to="/profile/registerInterviewer" icon={HiUser} text="Register Interviewer" />
                 )}
 
                 {/* Job Listings - Only for Company */}
                 {currentUser?.role === "company" && (
-                    <SidebarItem to={`/get-my-job/${currentUser?._id}`} icon={HiBriefcase} text="Listed Jobs" />
+                    <SidebarItem to={`/profile/get-my-job/${currentUser?._id}`} icon={HiBriefcase} text="Listed Jobs" />
                 )}
 
                 {/* createjob - Only for company */}
                 {currentUser?.role === "company" && (
-                    <SidebarItem to='/createjob' icon={HiBriefcase} text="Create Jobs" />
+                    <SidebarItem to='/profile/createjob' icon={HiBriefcase} text="Create Jobs" />
                 )}
                 {currentUser?.role === "jobseeker" && !currentUser?.isAdmin && (
-                    <SidebarItem to='/getappiedjobs' icon={HiBriefcase} text="Applied Jobs" />
+                    <SidebarItem to='/profile/getappiedjobs' icon={HiBriefcase} text="Applied Jobs" />
                 )}
                 {/* Sign Out */}
-                <button 
-                    onClick={handleSignout} 
+                <button
+                    onClick={handleSignout}
                     className="flex items-center w-full p-3 rounded-lg hover:bg-gray-800 transition"
                 >
                     <HiArrowSmRight className="w-5 h-5 mr-3" />
@@ -85,8 +87,7 @@ function SidebarItem({ to, icon: Icon, text, label }) {
         <NavLink
             to={to}
             className={({ isActive }) =>
-                `flex items-center p-3 rounded-lg transition ${
-                    isActive ? "bg-blue-600 text-white" : "hover:bg-gray-800 text-gray-300"
+                `flex items-center p-3 rounded-lg transition ${isActive ? "bg-blue-600 text-white" : "hover:bg-gray-800 text-gray-300"
                 }`
             }
         >

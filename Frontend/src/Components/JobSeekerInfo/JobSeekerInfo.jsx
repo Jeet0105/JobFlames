@@ -8,47 +8,6 @@ function JobSeekerInfo() {
     const navigate = useNavigate();
     console.log('currentUser: ', currentUser);
 
-
-
-    // const handleProfilePictureChange = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setProfileData({
-    //             ...profileData,
-    //             profilePicture: URL.createObjectURL(file),
-    //         });
-    //     }
-    // };
-
-
-    // const handleResumeURLChange = (e) => {
-    //     const url = e.target.value;
-    //     setProfileData({
-    //         ...profileData,
-    //         resume_url: url, 
-    //         resumeFile: null,
-    //     });
-    // };
-
-    // const handleResumeFileUpload = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setProfileData({
-    //             ...profileData,
-    //             resume_url: URL.createObjectURL(file), 
-    //             resumeFile: file, 
-    //         });
-    //     }
-    // };
-
-    // const handleFieldChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setProfileData({
-    //         ...profileData,
-    //         [name]: value,
-    //     });
-    // };
-
     const renderStars = (rating) => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
@@ -121,10 +80,10 @@ function JobSeekerInfo() {
                                 <FaLink className="text-gray-500 dark:text-gray-400" />
                             )}
                             <a
-                                href={linkItem.Link}
+                                href={linkItem.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:underline"
+                                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                             >
                                 {linkItem.LinkLabel}
                             </a>

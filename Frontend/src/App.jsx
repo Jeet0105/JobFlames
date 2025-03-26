@@ -24,6 +24,16 @@ import ListJobs from './Pages/ListJobs';
 import Com_Edit_Profile from './Components/Com-Edit-Profile/Com_Edit_Profile';
 import CreateSubscriptionPlan from './Components/CreateSubscriptionPlan/CreateSubscriptionPlan';
 import SubscriptionPlans from './Components/SubscriptionPlan/SubscriptionPlan';
+import GetCompanyJob from './Components/GetCompanyJob/GetCompanyJob';
+import GetJobSeekers from './Components/GetUsers/GetUsers';
+import GetApplications from './Components/GetApplication/GetApplication';
+import GetAllJob from './Components/GetAllJob.jsx/GetAllJob';
+import GetAppliedJobs from './Components/GetAppliedJobs/GetAppliedJobs';
+import CreateJobCom from './Components/CreateJob/CreateJobComp';
+import GetCompanies from './Components/GetCompanies/GetCompanies';
+import GetInterviewer from './Components/GetInterviewer/GetInterviewer';
+import InterviewerInfo from './Components/InterviewerInfo/InterviewerInfo';
+import InterviewerEditProfile from './Components/Interviewer_Edit_Profile/Interviewer_Edit_Profile';
 
 function App() {
 
@@ -37,41 +47,73 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
-        <Route path='/createjob' element={<CreateJob />} />
         <Route path='/showjob' element={<ShowJobs />} />
         <Route path='/profile' element={<Profile />} >
-        {currentUser?.role === "jobseeker" ? 
-          <Route index element={<Navigate to="JobSeeker" />} /> 
-          : 
-          <Route index element={<Navigate to="Company" />} />
-          }
+          {currentUser?.role === "jobseeker" ? (
+            <Route index element={<Navigate to="JobSeeker" />} />
+          ) : currentUser?.role === "interviewer" ? (
+            <Route index element={<Navigate to="Interviewer" />} />
+          ) : (
+            <Route index element={<Navigate to="Company" />} />
+          )}
           <Route path='JobSeeker' element={<JobSeekerInfo />} />
           <Route path='Company' element={<CompanyInfo />} />
+          <Route path='Interviewer' element={<InterviewerInfo />} />
           <Route path='Create-Subscription' element={<CreateSubscriptionPlan />} />
-          <Route path='edit-profile/:id' element={currentUser?.role === "jobseeker" ? <EditProfile /> : <Com_Edit_Profile/>} />
+          <Route path='edit-profile/:id' element={currentUser?.role === "jobseeker" ? (<EditProfile />) : currentUser?.role === "interviewer" ? (<InterviewerEditProfile/>) : (<Com_Edit_Profile />)} />
+          {currentUser?.role === "company" && (
+            <Route path="get-my-job/:id" element={<GetCompanyJob />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="getallcompanies" element={<GetCompanies />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="getallusers" element={<GetJobSeekers />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="getallapplications" element={<GetApplications />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="getalljobs" element={<GetAllJob />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="getallinterviewers" element={<GetInterviewer />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="registerInterviewer" element={<RegisterInterviewer />} />
+          )}
+          {currentUser?.role === "company" && (
+            <Route path="myjobdetail/:id" element={<ApplicantJob />} />
+          )}
+          {currentUser?.role === "company" && (
+            <Route path='createjob' element={<CreateJobCom />} />
+          )}
+          {currentUser?.role === "jobseeker" && (
+            <Route path='getappiedjobs' element={<GetAppliedJobs />} />
+          )}
         </Route>
         <Route path="/job/:id" element={<JobDetail />} />
-        {currentUser?.role === "company" && (
+        {/* {currentUser?.role === "company" && (
           <Route path="/get-my-job/:id" element={<CompanyJobs />} />
-        )}
-        {currentUser?.isAdmin && (
+        )} */}
+        {/* {currentUser?.isAdmin && (
           <Route path="/getallcompanies" element={<ListCompanies />} />
-        )}
-        {currentUser?.isAdmin && (
+        )} */}
+        {/* {currentUser?.isAdmin && (
           <Route path="/getallusers" element={<ListUsers />} />
-        )}
-        {currentUser?.isAdmin && (
+        )} */}
+        {/* {currentUser?.isAdmin && (
           <Route path="/getallapplications" element={<ListApplications />} />
-        )}
-        {currentUser?.isAdmin && (
+        )} */}
+        {/* {currentUser?.isAdmin && (
           <Route path="/getalljobs" element={<ListJobs />} />
-        )}
-        {currentUser?.role === "company" && (
+        )} */}
+        {/* {currentUser?.role === "company" && (
           <Route path="/myjobdetail/:id" element={<ApplicantJob />} />
-        )}
-        {currentUser?.role === "jobseeker" && (
+        )} */}
+        {/* {currentUser?.role === "jobseeker" && (
           <Route path='/getappiedjobs' element={<AppliedJobs />} />
-        )}
+        )} */}
       </Routes>
       <Footer />
     </BrowserRouter>

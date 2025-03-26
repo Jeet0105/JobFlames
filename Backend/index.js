@@ -6,6 +6,7 @@ import companyRouter from "./routes/company.route.js";
 import subscriptionRouter from './routes/subscription.route.js';
 import applicationRouter from "./routes/Application.router.js";
 import zoomRouter from "./routes/zoom.router.js";
+import interviewerRouter from "./routes/interviewer.router.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 
@@ -27,6 +28,7 @@ app.use("/api/v1/company",companyRouter);
 app.use("/api/v1/subscription",subscriptionRouter);
 app.use("/api/v1/application",applicationRouter);
 app.use("/api/v1/zoom",zoomRouter);
+app.use("/api/v1/interviewer",interviewerRouter);
 
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

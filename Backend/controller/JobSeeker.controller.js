@@ -335,7 +335,7 @@ export const getAllApplication = async (req, res) => {
       })
       .populate({
         path: "applicant_id",
-        select: "name email contact_no resume_url",
+        select: "name email contact_no resumeUrl",
       })
       .sort({ createdAt: -1 });
 

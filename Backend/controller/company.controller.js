@@ -228,7 +228,7 @@ export const getApplicantsForJob = async (req, res) => {
         const applications = await Application.find({ job_id: id })
         .populate({
             path: "applicant_id",
-            select: "name email profilePicture resume_url contact_no experience"
+            select: "name email profilePicture resumeUrl contact_no experience"
         })
         .select("status resume createdAt")
         .sort({ createdAt: -1 }); // Sort by newest applications first
@@ -244,7 +244,7 @@ export const getApplicantsForJob = async (req, res) => {
             name: app.applicant_id?.name || "Not available",
             email: app.applicant_id?.email || "Not available",
             profilePicture: app.applicant_id?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
-            resume: app.resume || app.applicant_id?.resume_url || "No resume available",
+            resume: app.resume || app.applicant_id?.resumeUrl || "No resume available",
             contact_no: app.applicant_id?.contact_no || "Not provided",
             experience: app.applicant_id?.experience || "Not specified",
             status: app.status,

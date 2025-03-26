@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaEdit, FaEnvelope, FaPhone, FaGlobe, FaMapMarkerAlt } from "react-icons/fa";
+import { FaEdit, FaEnvelope, FaPhone, FaGlobe, FaMapMarkerAlt, FaGithub, FaLinkedin, FaLink } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,7 @@ function CompanyInfo() {
 
     const navigate = useNavigate();
     const currentUser = useSelector((state) => state.user.currentUser);
+    console.log('currentUser: ', currentUser);
 
 
     return (
@@ -79,6 +80,7 @@ function CompanyInfo() {
                     {currentUser?.AllLinks?.map((linkItem, index) => (
                         <div key={index} className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
                             {linkItem?.LinkLabel.toLowerCase().includes("github") ? (
+
                                 <FaGithub className="text-gray-800 dark:text-gray-200" />
                             ) : linkItem.LinkLabel.toLowerCase().includes("linkedin") ? (
                                 <FaLinkedin className="text-blue-700" />
@@ -86,10 +88,10 @@ function CompanyInfo() {
                                 <FaLink className="text-gray-500 dark:text-gray-400" />
                             )}
                             <a
-                                href={linkItem.link}
+                                href={linkItem.Link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:underline"
+                                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                             >
                                 {linkItem.LinkLabel}
                             </a>

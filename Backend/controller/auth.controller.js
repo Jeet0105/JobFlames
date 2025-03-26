@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import Company from "../model/Company.model.js";
 import JobSeeker from "../model/JobSeeker.model.js";
+import Interviewer from "../model/Interviewer.model.js";
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
@@ -17,36 +18,61 @@ export const login = async (req, res) => {
         if (!user) {
             user = await Company.findOne({ email });
             role = user ? "company" : null;
+            if (!user) {
+                user = await Interviewer.findOne({ email });
+                role = user ? "interviewer" : null;
+            }
         }
 
         if (!user) {
             return res.status(404).json({ message: "User does not exist. Please register first." });
         }
 
+        console.log('user.password: ', user.password);
+        console.log('user: ', user);
+        console.log('password: ', password);
         const validPassword = await bcryptjs.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ message: "Invalid credentials. Please check your email or password." });
         }
 
-        const { password: pass, ...rest } = user._doc;
+        if (role === 'interviewer') {
+            const { password: pass, ...rest } = user._doc;
+            const token = jwt.sign(
+                { id: user._id, name: user.name, role },
+                process.env.JWT_SECRET,
+                { expiresIn: "5h" }
+            )
 
-        const token = jwt.sign(
-            { id: user._id, isAdmin: user.isAdmin, role },
-            process.env.JWT_SECRET,
-            { expiresIn: "5h" }
-        );
+            return res
+                .status(200)
+                .cookie("access_token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "strict",
+                    maxAge: 5 * 60 * 60 * 1000
+                })
+                .json({ ...rest, role });
+        }
+        else {
+            const { password: pass, ...rest } = user._doc;
+            const token = jwt.sign(
+                { id: user._id, isAdmin: user.isAdmin, role },
+                process.env.JWT_SECRET,
+                { expiresIn: "5h" }
+            );
 
-        console.log('{ ...rest, role }: ', { ...rest, role });
-        return res
-            .status(200)
-            .cookie("access_token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 5 * 60 * 60 * 1000
-            })
-            
-            .json({ ...rest, role });
+            console.log('{ ...rest, role }: ', { ...rest, role });
+            return res
+                .status(200)
+                .cookie("access_token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "strict",
+                    maxAge: 5 * 60 * 60 * 1000
+                })
+                .json({ ...rest, role });
+        }
 
     } catch (error) {
         console.error("Error during login:", error);

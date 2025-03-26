@@ -21,7 +21,7 @@ export const apply = async (req, res) => {
         if (!jobseeker) {
             return res.status(404).json({ message: "Job seeker not found" });
         }
-        if (!jobseeker.resume_url) {
+        if (!jobseeker.resumeUrl) {
             return res.status(400).json({ message: "Resume is required to apply for this job" });
         }
 
@@ -33,7 +33,7 @@ export const apply = async (req, res) => {
         const application = new Application({
             job_id,
             applicant_id: jobseeker_id,
-            resume: jobseeker.resume_url,
+            resume: jobseeker.resumeUrl,
         });
 
         await application.save();

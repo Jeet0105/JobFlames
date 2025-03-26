@@ -7,6 +7,10 @@ const interviewerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    profilePicture : {
+      type : String,
+      default : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+    },
     email: {
       type: String,
       required: true,
@@ -17,7 +21,6 @@ const interviewerSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      select: false,
     },
     phone: {
       type: String,
@@ -33,9 +36,9 @@ const interviewerSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
-      min: [1, "Rating must be at least 1"],
+      min: [0, "Rating must be at least 1"],
       max: [5, "Rating cannot exceed 5"],
-      default: 1,
+      default: 0,
     },
     linkedInProfile: {
       type: String,
