@@ -16,6 +16,7 @@ function CreateJobCom() {
     skills_required: [],
   });
 
+  const [skillInput, setSkillInput] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
@@ -30,22 +31,59 @@ function CreateJobCom() {
     });
   };
 
-  const handleSkillsChange = (e) => {
-    const skills = e.target.value
-      .split(",")
-      .map((skill) => skill.trim())
-      .filter((skill) => skill !== "");
+  const handleSkillInputChange = (e) => {
+    setSkillInput(e.target.value);
+  };
 
-    setFormData({
-      ...formData,
-      skills_required: skills,
-    });
+  const addSkills = () => {
+    if (!skillInput.trim()) return;
+    
+    const newSkills = skillInput
+      .split(",")
+      .map(skill => skill.trim())
+      .filter(skill => skill !== "");
+    
+    if (newSkills.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        skills_required: [...new Set([...prev.skills_required, ...newSkills])]
+      }));
+      setSkillInput("");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addSkills();
+    }
+  };
+
+  const removeSkill = (skillToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      skills_required: prev.skills_required.filter(skill => skill !== skillToRemove)
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    // Validate form
+    if (!formData.title.trim()) {
+      setError("Job title is required");
+      return;
+    }
+    if (!formData.description.trim()) {
+      setError("Job description is required");
+      return;
+    }
+    if (formData.skills_required.length === 0) {
+      setError("Please add at least one skill");
+      return;
+    }
 
     try {
       const res = await axios.post(`http://localhost:3000/api/v1/company/post-job`, formData, {
@@ -64,6 +102,7 @@ function CreateJobCom() {
           job_type: "full-time",
           skills_required: [],
         });
+        setSkillInput("");
       } else {
         toast.error(res?.data?.message);
         setError(res?.data?.message || "Error posting job");
@@ -76,6 +115,7 @@ function CreateJobCom() {
 
   if (!currentUser || currentUser?.role !== "company") {
     navigate("/");
+    return null;
   }
 
   return (
@@ -107,7 +147,7 @@ function CreateJobCom() {
             placeholder="Job Description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full border rounded-lg p-3 bg-gray-50 outline-none text-gray-700"
+            className="w-full border rounded-lg p-3 bg-gray-50 outline-none text-gray-700 min-h-[150px]"
             required
           />
 
@@ -134,6 +174,7 @@ function CreateJobCom() {
               onChange={handleChange}
               className="w-full bg-transparent outline-none text-gray-700"
               required
+              min="0"
             />
           </div>
 
@@ -147,6 +188,8 @@ function CreateJobCom() {
               onChange={handleChange}
               className="w-full bg-transparent outline-none text-gray-700"
               required
+              min="0"
+              step="0.5"
             />
           </div>
 
@@ -164,17 +207,39 @@ function CreateJobCom() {
             ))}
           </select>
 
-          <div className="flex items-center border rounded-lg p-3 bg-gray-50">
-            <List className="text-gray-500 mr-3" />
-            <input
-              type="text"
-              name="skills_required"
-              placeholder="Skills (comma-separated)"
-              value={formData.skills_required.join(", ")}
-              onChange={handleSkillsChange}
-              className="w-full bg-transparent outline-none text-gray-700"
-              required
-            />
+          <div className="space-y-2">
+            <div className="flex items-center border rounded-lg p-3 bg-gray-50">
+              <List className="text-gray-500 mr-3" />
+              <input
+                type="text"
+                placeholder="Add skills (separate by comma or press Enter)"
+                value={skillInput}
+                onChange={handleSkillInputChange}
+                onKeyDown={handleKeyDown}
+                onBlur={addSkills}
+                className="w-full bg-transparent outline-none text-gray-700"
+              />
+            </div>
+            {formData.skills_required.length > 0 && (
+              <div className="flex flex-wrap gap-2 p-2">
+                {formData.skills_required.map((skill) => (
+                  <span 
+                    key={skill} 
+                    className="flex items-center bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+                  >
+                    {skill}
+                    <button 
+                      type="button"
+                      onClick={() => removeSkill(skill)}
+                      className="ml-1 text-blue-600 hover:text-blue-800"
+                      aria-label={`Remove ${skill}`}
+                    >
+                      &times;
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           <button

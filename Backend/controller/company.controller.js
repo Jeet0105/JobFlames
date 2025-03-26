@@ -11,7 +11,7 @@ export const register = async (req, res) => {
         return res.status(400).json({ message: "All fields are required." });
     }
 
-    const phoneRegex = /^[0-9]{10,15}$/;
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
     if (!phoneRegex.test(contact_no)) {
         return res.status(400).json({ message: "Please enter a valid phone number." });
     }
