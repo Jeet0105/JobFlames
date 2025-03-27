@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaTrash } from "react-icons/fa";
@@ -7,7 +6,6 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { signInSuccess } from '../../Redux/user/userSlice';
 import { toast } from 'react-toastify';
-import { current } from '@reduxjs/toolkit';
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -106,7 +104,7 @@ function EditProfile() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-6">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-3xl bg-white dark:bg-gray-800 shadow-2xl rounded-xl overflow-hidden">
         <div className="p-8 border-b border-gray-200 dark:border-gray-700 flex flex-col items-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Edit Profile</h2>
