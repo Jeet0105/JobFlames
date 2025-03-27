@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaTrash } from "react-icons/fa";
@@ -7,7 +6,6 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { signInSuccess } from '../../Redux/user/userSlice';
 import { toast } from 'react-toastify';
-import { current } from '@reduxjs/toolkit';
 
 function EditProfile() {
   const navigate = useNavigate();
