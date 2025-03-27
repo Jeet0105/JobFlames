@@ -34,6 +34,8 @@ import GetCompanies from './Components/GetCompanies/GetCompanies';
 import GetInterviewer from './Components/GetInterviewer/GetInterviewer';
 import InterviewerInfo from './Components/InterviewerInfo/InterviewerInfo';
 import InterviewerEditProfile from './Components/Interviewer_Edit_Profile/Interviewer_Edit_Profile';
+import ScheduleInterview from './Components/ScheduleInterview/ScheduleInterview';
+import GetApplicantForInterview from './Components/GetApplicantForInterview/GetApplicantForInterview';
 
 function App() {
 
@@ -47,6 +49,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/createjob' element={<CreateJobCom />} />
         <Route path='/showjob' element={<ShowJobs />} />
         <Route path='/profile' element={<Profile />} >
           {currentUser?.role === "jobseeker" ? (
@@ -82,11 +85,20 @@ function App() {
           {currentUser?.isAdmin && (
             <Route path="registerInterviewer" element={<RegisterInterviewer />} />
           )}
+          {currentUser?.isAdmin && (
+            <Route path="createSubscription" element={<CreateSubscriptionPlan />} />
+          )}
+          {currentUser?.isAdmin && (
+            <Route path="subscriptionPlan" element={<SubscriptionPlans />} />
+          )}
           {currentUser?.role === "company" && (
             <Route path="myjobdetail/:id" element={<ApplicantJob />} />
           )}
-          {currentUser?.role === "company" && (
-            <Route path='createjob' element={<CreateJobCom />} />
+          {currentUser?.role === "interviewer" && (
+            <Route path="myjobdetail/:id" element={<GetApplicantForInterview />} />
+          )}
+          {currentUser?.role === "interviewer" && (
+            <Route path='scheduleInterview' element={<ScheduleInterview />} />
           )}
           {currentUser?.role === "jobseeker" && (
             <Route path='getappiedjobs' element={<GetAppliedJobs />} />

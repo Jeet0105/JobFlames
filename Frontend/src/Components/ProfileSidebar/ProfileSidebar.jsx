@@ -1,5 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { HiUser, HiBriefcase, HiArrowSmRight } from "react-icons/hi";
+import { HiUser,HiArrowSmRight } from "react-icons/hi";
+import { 
+    FaUsers, FaUserTie, FaBriefcase, FaFileAlt, FaUserPlus, 
+    FaRegCreditCard, FaBuilding, FaClipboardList, FaPlusCircle, FaCheckCircle, FaCalendarCheck 
+  } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { signoutSuccess } from "../../Redux/user/userSlice";
@@ -32,42 +36,53 @@ function ProfileSidebar() {
 
                 {/* Get Companies - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/profile/getallcompanies" icon={HiUser} text="Get Companies" />
+                    <SidebarItem to="/profile/getallcompanies" icon={FaBuilding} text="Get Companies" />
                 )}
 
                 {/* Get Users - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/profile/getallusers" icon={HiUser} text="Get Users" />
+                    <SidebarItem to="/profile/getallusers" icon={FaUsers} text="Get Users" />
                 )}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/profile/getallinterviewers" icon={HiUser} text="Get Interviewer" />
+                    <SidebarItem to="/profile/getallinterviewers" icon={FaUserTie} text="Get Interviewer" />
                 )}
                 {/* Get Jobs - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/profile/getalljobs" icon={HiUser} text="Get Jobs" />
+                    <SidebarItem to="/profile/getalljobs" icon={FaBriefcase} text="Get Jobs" />
                 )}
+                
 
                 {/* Get application - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/profile/getallapplications" icon={HiUser} text="Get Applications" />
+                    <SidebarItem to="/profile/getallapplications" icon={FaFileAlt} text="Get Applications" />
                 )}
 
                 {/* Register Interviewer - Only for Admins */}
                 {currentUser?.isAdmin && (
-                    <SidebarItem to="/profile/registerInterviewer" icon={HiUser} text="Register Interviewer" />
+                    <SidebarItem to="/profile/registerInterviewer" icon={FaUserPlus} text="Register Interviewer" />
                 )}
 
+                {/* create subscription - only for admin */}
+                {currentUser?.isAdmin && (
+                    <SidebarItem to="/profile/createSubscription" icon={FaRegCreditCard} text="Create Subscription" />
+                )}
+                {currentUser?.isAdmin && (
+                    <SidebarItem to="/profile/subscriptionPlan" icon={FaRegCreditCard} text="Subscription Plans" />
+                )}
                 {/* Job Listings - Only for Company */}
                 {currentUser?.role === "company" && (
-                    <SidebarItem to={`/profile/get-my-job/${currentUser?._id}`} icon={HiBriefcase} text="Listed Jobs" />
+                    <SidebarItem to={`/profile/get-my-job/${currentUser?._id}`} icon={FaClipboardList} text="Listed Jobs" />
                 )}
 
                 {/* createjob - Only for company */}
                 {currentUser?.role === "company" && (
-                    <SidebarItem to='/profile/createjob' icon={HiBriefcase} text="Create Jobs" />
+                    <SidebarItem to='/createjob' icon={FaPlusCircle} text="Create Jobs" />
+                )}
+                {currentUser?.role === "interviewer" && (
+                    <SidebarItem to='/profile/scheduleInterview' icon={FaCalendarCheck} text="Schedule Interview" />
                 )}
                 {currentUser?.role === "jobseeker" && !currentUser?.isAdmin && (
-                    <SidebarItem to='/profile/getappiedjobs' icon={HiBriefcase} text="Applied Jobs" />
+                    <SidebarItem to='/profile/getappiedjobs' icon={FaCheckCircle} text="Applied Jobs" />
                 )}
                 {/* Sign Out */}
                 <button

@@ -29,7 +29,7 @@ const SubscriptionPlans = () => {
     
 
   return plans.length > 0 && (
-    <div className="flex justify-center items-center py-12 bg-gray-100 gap-6">
+    <div className="flex justify-center items-center py-12 min-h-[100%] bg-gray-100 gap-6">
       {plans.map((plan, index) => (
         <div
           key={index}
