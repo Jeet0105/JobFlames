@@ -54,11 +54,11 @@ export const updateJobSeekers = async (req, res) => {
   try {
     const { _id, name, email, contact_no, experience, AllLinks } = req.body;
     let profilePictureUrl = null;
-    let resumeUrl = null;
+    let resume_url = null;
 
     if (!_id || !name || !email || !contact_no || !experience) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "One fields are required",
         success: false,
         status: 400
       });
@@ -116,11 +116,11 @@ export const updateJobSeekers = async (req, res) => {
 
     console.log('req.files: ', req.files);
 
-    if (req.files?.resumeUrl) {
-      const fileType = req.files.resumeUrl[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
-      const localPath = req.files.resumeUrl[0].path;
+    if (req.files?.resume_url) {
+      const fileType = req.files.resume_url[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+      const localPath = req.files.resume_url[0].path;
       const uploadResponse = await uploadOnCloudinary(localPath, fileType);
-      resumeUrl = uploadResponse?.secure_url || null;
+      resume_url = uploadResponse?.secure_url || null;
     }
 
 
@@ -130,7 +130,7 @@ export const updateJobSeekers = async (req, res) => {
       contact_no,
       experience,
       profilePicture: profilePictureUrl ? profilePictureUrl : existingUser.profilePicture,
-      resumeUrl: resumeUrl ? resumeUrl : existingUser.resumeUrl,
+      resume_url: resume_url ? resume_url : existingUser.resume_url,
       AllLinks
     }, { new: true });
 

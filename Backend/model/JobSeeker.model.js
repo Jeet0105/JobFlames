@@ -43,10 +43,6 @@ const jobSeekerSchema = new mongoose.Schema({
             }
         }]
     },
-    resumeUrl : {
-        type : String,
-        default : "No Resume Url"
-    },
     password:{
         type: String,
         required: true
