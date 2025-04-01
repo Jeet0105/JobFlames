@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import Company from "../model/Company.model.js";
 import Job from '../model/Job.modem.js';
+import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import Application from '../model/Application.model.js';
 
 export const register = async (req, res) => {
@@ -46,6 +47,121 @@ export const register = async (req, res) => {
         return res.status(500).json({ message: "Something went wrong. Please try again later." });
     }
 };
+
+
+export const updateCompany = async (req, res) => {
+    const { name, email, website, location, description, industry_type, contact_no, AllLinks } = req.body;
+    const company_id = req.user?.id;
+    let logoUrl = null;
+
+    if (!company_id) {
+        return res.status(401).json({
+            message: "Unauthorized actions.",
+            status: 401,
+            success: false
+        })
+    }
+
+    try {
+        if (!name || !email || !contact_no || !website || !location || !industry_type) {
+            return res.status(400).json({
+                message: "All fields are required.",
+                status: 400,
+                success: false
+            })
+        }
+
+        const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+        if (!phoneRegex.test(contact_no)) {
+            return res.status(400).json({
+                message: "Please enter a valid phone number.",
+                status: 400,
+                success: false
+            });
+        }
+
+        const existedCompany = await Company.findById(company_id);
+        if (!existedCompany) {
+            return res.status(404).json({
+                message: "Company not found.",
+                status: 404,
+                success: false
+            })
+        }
+
+        const allEmails = await Company.find({ email: email });
+        if (allEmails.length > 1) {
+            allEmails.forEach((user) => {
+                if (user._id !== existedCompany._id) {
+                    return res.status(400).json({
+                        message: "Email already exists",
+                        success: false,
+                        status: 400
+                    });
+                }
+            })
+        }
+
+        const allNumbers = await Company.find({ contact_no: contact_no });
+        if (allNumbers.length > 1) {
+            allNumbers.forEach((user) => {
+                if (user._id !== existedCompany._id) {
+                    return res.status(400).json({
+                        message: "Contact number already exists",
+                        success: false,
+                        status: 400
+                    });
+                }
+            })
+        }
+
+        if (req.files?.profilePicture) {
+            const fileType = req.files.profilePicture[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+            const localPath = req.files.profilePicture[0].path;
+            const uploadResponse = await uploadOnCloudinary(localPath, fileType);
+            logoUrl = uploadResponse?.secure_url || null;
+        }
+
+        const updatedCompany = await Company.findByIdAndUpdate(existedCompany._id, {
+            name : name,
+            email : email,
+            website : website,
+            location : location,
+            description : description || existedCompany.description,
+            industry_type : industry_type,
+            contact_no : contact_no,
+            logo : logoUrl ? logoUrl : existedCompany.logo,
+            AllLinks : AllLinks || []
+        },{new : true});
+
+        if (!updatedCompany) {
+            return res.status(404).json({
+                message : "Company Not found",
+                success : false,
+                status : 404
+              })
+        }
+
+        const updatedCompanys = updatedCompany.toObject();
+        updatedCompanys.role = "company";
+        return res.status(200).json({
+            message : "Company updated successfully",
+            success : true,
+            status : 200,
+            data : updatedCompanys
+        })
+
+    }
+    catch (error) {
+        console.log("Error while updating the company : ",error);
+        return res.status(500).json({
+            message : "Something went wrong",
+            success : false,
+            status : 500
+        })
+    }
+}
+
 
 export const createJob = async (req, res) => {
     const { title, description, location, salary_expected, experience, job_type, skills_required } = req.body;
@@ -110,13 +226,14 @@ export const getApplicantsForJob = async (req, res) => {
 
     try {
         const applications = await Application.find({ job_id: id })
-            .populate({
-                path: "applicant_id",
-                select: "name email profilePicture resume_url contact_no experience"
-            })
-            .select("status resume createdAt")
-            .sort({ createdAt: -1 }); // Sort by newest applications first
-
+        .populate({
+            path: "applicant_id",
+            select: "name email profilePicture resumeUrl contact_no experience"
+        })
+        .select("status resume createdAt")
+        .sort({ createdAt: -1 }); // Sort by newest applications first
+        
+        console.log('applications: ', applications);
         if (!applications.length) {
             return res.status(404).json({ message: "No applications found for this job." });
         }
@@ -127,7 +244,7 @@ export const getApplicantsForJob = async (req, res) => {
             name: app.applicant_id?.name || "Not available",
             email: app.applicant_id?.email || "Not available",
             profilePicture: app.applicant_id?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
-            resume: app.resume || app.applicant_id?.resume_url || "No resume available",
+            resume: app.resume || app.applicant_id?.resumeUrl || "No resume available",
             contact_no: app.applicant_id?.contact_no || "Not provided",
             experience: app.applicant_id?.experience || "Not specified",
             status: app.status,

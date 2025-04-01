@@ -65,16 +65,16 @@ function GetCompanies() {
 
             {loading && <Loader2 className="animate-spin text-blue-500 h-10 w-10 mx-auto" />}
             {error && <p className="text-red-600 text-center">{error}</p>}
-            {!loading && !error && filteredCompanies.length === 0 && (
+            {!loading && !error && filteredCompanies?.length === 0 && (
                 <p className="text-gray-500 text-center">
                     {searchTerm ? "No matching companies found" : "No companies found."}
                 </p>
             )}
 
             {/* Display total count - now shows filtered count */}
-            {!loading && !error && filteredCompanies.length > 0 && (
+            {!loading && !error && filteredCompanies?.length > 0 && (
                 <p className="text-lg font-semibold text-blue text-center mb-4">
-                    Showing {filteredCompanies.length} of {companies.length} companies
+                    Showing {filteredCompanies?.length} of {companies?.length} companies
                 </p>
             )}
 

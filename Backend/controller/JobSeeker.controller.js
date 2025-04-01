@@ -335,12 +335,12 @@ export const getAllApplication = async (req, res) => {
       })
       .populate({
         path: "applicant_id",
-        select: "name email contact_no resume_url",
+        select: "name email contact_no resumeUrl",
       })
       .sort({ createdAt: -1 });
 
     if (!applications.length) {
-      return res.status(200).json({
+      return res.status(400).json({
         message: "No applications found",
         data: [],
         count: 0,

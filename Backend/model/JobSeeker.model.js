@@ -11,6 +11,12 @@ const jobSeekerSchema = new mongoose.Schema({
         unique: true,
         match: [/\S+@\S+\.\S+/, "Please enter a valid email"]
     },
+    rating: { 
+        type: Number, 
+        min: 0, 
+        max: 5, 
+        default: 0 
+    },
     profilePicture: {
         type: String,
         default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
@@ -24,10 +30,6 @@ const jobSeekerSchema = new mongoose.Schema({
         required: true,
         unique: true,
         match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"]
-    },
-    resume_url: {
-        type: String,
-        default: "a"
     },
     experience: {
         type: String,
@@ -46,6 +48,9 @@ const jobSeekerSchema = new mongoose.Schema({
     password:{
         type: String,
         required: true
+    },
+    interview_join_url : {
+        type : String
     }
 },{timestamps:true});
 

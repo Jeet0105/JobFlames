@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Loader2, Briefcase, MapPin, DollarSign, Calendar, Clock } from "lucide-react";
+import { Loader2, Briefcase, Calendar, Clock, ListChecks } from "lucide-react";
+import { toast } from "react-toastify";
 
-function GetCompanyJob() {
+function ScheduleInterview() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
@@ -13,12 +14,17 @@ function GetCompanyJob() {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/v1/company/get-my-job/${id}`, {
+                const response = await axios.get(`http://localhost:3000/api/v1/interviewer/getAllJobsForInterviewer`, {
                     withCredentials: true,
                 });
-                setJobs(response.data);
+                if (response?.data?.success) {
+                    setJobs(response?.data?.data);
+                } else {
+                    toast.error(response?.data?.message);
+                }
             } catch (err) {
                 setError(err.response?.data?.message || "Failed to fetch jobs.");
+                toast.error(err?.response?.data?.message);
             } finally {
                 setLoading(false);
             }
@@ -28,8 +34,8 @@ function GetCompanyJob() {
     }, [id]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center">
-            <h2 className="text-4xl font-extrabold text-blue-600 mb-6">Company Job Listings</h2>
+        <div className="min-h-screen flex flex-col items-center py-10">
+            <h2 className="text-4xl font-extrabold text-blue-600 mb-10">Select Job For Interview</h2>
 
             {loading && <Loader2 className="animate-spin text-blue-500 h-12 w-12" />}
             {error && <p className="text-red-600 bg-red-100 px-4 py-3 rounded-md">{error}</p>}
@@ -48,16 +54,16 @@ function GetCompanyJob() {
                         <p className="text-gray-600 mt-2 text-sm">{job.description}</p>
                         <div className="mt-4 space-y-3">
                             <div className="flex items-center text-gray-700">
-                                <MapPin className="mr-2 text-green-500" /> <span>{job.location}</span>
+                                <Calendar className="mr-2 text-purple-500" /> 
+                                <span>Posted: {new Date(job.createdAt).toDateString()}</span>
                             </div>
                             <div className="flex items-center text-gray-700">
-                                <DollarSign className="mr-2 text-yellow-500" /> <span>${job.salary_expected}</span>
+                                <Clock className="mr-2 text-red-500" /> 
+                                <span>Job Type: {job.job_type}</span>
                             </div>
                             <div className="flex items-center text-gray-700">
-                                <Calendar className="mr-2 text-purple-500" /> <span>Posted: {new Date(job.createdAt).toDateString()}</span>
-                            </div>
-                            <div className="flex items-center text-gray-700">
-                                <Clock className="mr-2 text-red-500" /> <span>Job Type: {job.job_type}</span>
+                                <ListChecks className="mr-2 text-green-500" /> 
+                                <span>Skills: {job.skills_required?.join(", ") || "Not specified"}</span>
                             </div>
                         </div>
                     </div>
@@ -67,4 +73,4 @@ function GetCompanyJob() {
     );
 }
 
-export default GetCompanyJob;
+export default ScheduleInterview;

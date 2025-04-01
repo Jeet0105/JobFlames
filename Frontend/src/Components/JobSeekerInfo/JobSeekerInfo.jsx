@@ -1,4 +1,4 @@
-import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit,FaLink } from "react-icons/fa";
+import { FaEnvelope, FaPhone, FaGithub, FaLinkedin, FaFileAlt, FaEdit,FaLink, FaStar } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
@@ -7,46 +7,18 @@ function JobSeekerInfo() {
     const navigate = useNavigate();
     console.log('currentUser: ', currentUser);
 
-
-
-    // const handleProfilePictureChange = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setProfileData({
-    //             ...profileData,
-    //             profilePicture: URL.createObjectURL(file),
-    //         });
-    //     }
-    // };
-
-
-    // const handleResumeURLChange = (e) => {
-    //     const url = e.target.value;
-    //     setProfileData({
-    //         ...profileData,
-    //         resume_url: url, 
-    //         resumeFile: null,
-    //     });
-    // };
-
-    // const handleResumeFileUpload = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setProfileData({
-    //             ...profileData,
-    //             resume_url: URL.createObjectURL(file), 
-    //             resumeFile: file, 
-    //         });
-    //     }
-    // };
-
-    // const handleFieldChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setProfileData({
-    //         ...profileData,
-    //         [name]: value,
-    //     });
-    // };
+    const renderStars = (rating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <FaStar 
+                    key={i} 
+                    className={`text-xl ${i <= rating ? "text-yellow-500" : "text-gray-300 dark:text-gray-600"}`} 
+                />
+            );
+        }
+        return stars;
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-200 dark:from-gray-900 dark:to-gray-800 px-6 py-5">
@@ -64,6 +36,11 @@ function JobSeekerInfo() {
                         <div className="text-center md:text-left">
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{currentUser?.name}</h1>
                             <p className="text-gray-600 dark:text-gray-400">Experience: {currentUser?.experience} years</p>
+
+                            <div className="flex items-center mt-2">
+                                {renderStars(currentUser?.rating)}  
+                                <span className="ml-2 text-gray-700 dark:text-gray-300 text-sm">({currentUser?.rating}/5)</span>
+                            </div>
                         </div>
                     </div>
                     <div className="text-center">
@@ -91,7 +68,7 @@ function JobSeekerInfo() {
                 </div>
 
 
-                <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 mb-6">
+                {/* <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300 mb-6">
                     {currentUser?.AllLinks?.map((linkItem, index) => (
                         <div key={index} className="flex items-center gap-3 border-b pb-3 dark:border-gray-700">
                             {linkItem?.LinkLabel.toLowerCase().includes("github") ? (
@@ -105,13 +82,13 @@ function JobSeekerInfo() {
                                 href={linkItem.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:underline"
+                                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                             >
                                 {linkItem.LinkLabel}
                             </a>
                         </div>
                     ))}
-                </div>
+                </div> */}
 
 
                 <div className="text-center mb-6">

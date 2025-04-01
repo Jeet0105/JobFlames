@@ -26,16 +26,18 @@ function EditProfile() {
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, [field]: file });
-      setImage(URL.createObjectURL(file));
+      console.log(file)
+        setFormData({ ...formData, [field]: file });
+        setImage(URL.createObjectURL(file));
     }
   };
 
   const handlePDFChange = (e) => {
     const file = e.target.files[0];
+    console.log('file: ', file);
     if (file) {
-      setFormData({ ...formData, resume_url: file });
-      setPDF(URL.createObjectURL(file));
+        setFormData({ ...formData, [field]: file });
+        setPDF(URL.createObjectURL(file));
     }
   };
 

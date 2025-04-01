@@ -8,7 +8,7 @@ function Profile() {
         <div className="w-[18%]">
         <ProfileSidebar />
         </div>
-        <div className="w-[85%] ml-9">
+        <div className="w-[85%]">
           <Outlet/>
         </div>
     </div>
