@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,27 +17,37 @@ function EditProfile() {
     profilePicture: currentUser?.profilePicture || "",
     contact_no: currentUser?.contact_no || "",
     experience: currentUser?.experience || "",
-    resume_url: currentUser?.resume_url || "",
+    resumeUrl: currentUser?.resumeUrl || "",
     AllLinks: currentUser?.AllLinks || [],
   });
-  const [image, setImage] = useState(currentUser?.profilePicture);
-  const [PDF, setPDF] = useState(currentUser?.resume_url);
+
+  // Cleanup object URLs on component unmount
+  useEffect(() => {
+    return () => {
+      if (formData.profilePicture instanceof File) {
+        URL.revokeObjectURL(formData.profilePicture);
+      }
+      if (formData.resumeUrl instanceof File) {
+        URL.revokeObjectURL(formData.resumeUrl);
+      }
+    };
+  }, [formData]);
 
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
-      console.log(file)
-        setFormData({ ...formData, [field]: file });
-        setImage(URL.createObjectURL(file));
+      setFormData({ ...formData, [field]: file });
     }
   };
 
   const handlePDFChange = (e) => {
     const file = e.target.files[0];
-    console.log('file: ', file);
     if (file) {
-        setFormData({ ...formData, [field]: file });
-        setPDF(URL.createObjectURL(file));
+      if (file.type === 'application/pdf') {
+        setFormData({ ...formData, resumeUrl: file });
+      } else {
+        alert('Please upload a valid PDF file.');
+      }
     }
   };
 
@@ -70,14 +80,14 @@ function EditProfile() {
       formDataToSend.append('email', formData.email);
       formDataToSend.append('contact_no', formData.contact_no);
       formDataToSend.append('experience', formData.experience);
-      formDataToSend.append('AllLinks', JSON.stringify(formData.AllLinks));
+      formDataToSend.append('AllLinks', formData.AllLinks);
 
       if (formData.profilePicture instanceof File) {
         formDataToSend.append('profilePicture', formData.profilePicture);
       }
 
-      if (formData.resume_url instanceof File) {
-        formDataToSend.append('resume_url', formData.resume_url);
+      if (formData.resumeUrl instanceof File) {
+        formDataToSend.append('resumeUrl', formData.resumeUrl);
       }
 
       const response = await axios.put(
@@ -117,7 +127,7 @@ function EditProfile() {
             <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-4">Profile Picture</label>
             <div className="w-40 h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-full overflow-hidden relative cursor-pointer hover:border-blue-500 transition-all">
               <img
-                src={image || "/default-profile.png"}
+                src={formData.profilePicture instanceof File ? URL.createObjectURL(formData.profilePicture) : formData.profilePicture || "/default-profile.png"}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
@@ -134,9 +144,9 @@ function EditProfile() {
           <div>
             <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-4">Resume</label>
             {
-              currentUser?.resume_url !== "a" ? (
+              currentUser?.resumeUrl !== "No resume uploaded" ? (
                 <a
-                  href={currentUser.resume_url}
+                  href={currentUser.resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 underline"

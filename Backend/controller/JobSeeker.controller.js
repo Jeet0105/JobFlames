@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import Interviewer from '../model/Interviewer.model.js';
 import Application from '../model/Application.model.js'
 import Company from '../model/Company.model.js'
+import { login } from './auth.controller.js';
 
 export const register = async (req, res) => {
   try {
@@ -58,12 +59,13 @@ export const updateJobSeekers = async (req, res) => {
 
     if (!_id || !name || !email || !contact_no || !experience) {
       return res.status(400).json({
-        message: "One fields are required",
+        message: "One of the fields is required",
         success: false,
         status: 400
       });
     }
 
+    // Validate phone number format
     const phoneRegex = /^\+?[1-9]\d{1,14}$/;
     if (!phoneRegex.test(contact_no)) {
       return res.status(400).json({
@@ -73,40 +75,36 @@ export const updateJobSeekers = async (req, res) => {
       });
     }
 
-    const existingUser = await JobSeeker.findOne({ email: email, _id: _id });
+    // Check if user exists
+    const existingUser = await JobSeeker.findOne({ email, _id });
     if (!existingUser) {
       return res.status(400).json({
-        message: "JobSeeker doesn't exists",
+        message: "JobSeeker doesn't exist",
         success: false,
         status: 400
       });
     }
 
-    const allEmails = await JobSeeker.find({ email: email });
+    // Ensure email and contact are unique for other users
+    const allEmails = await JobSeeker.find({ email });
     if (allEmails.length > 1) {
-      allEmails.forEach((user) => {
-        if (user._id !== existingUser._id) {
-          return res.status(400).json({
-            message: "Email already exists",
-            success: false,
-            status: 400
-          });
-        }
-      })
+      return res.status(400).json({
+        message: "Email already exists",
+        success: false,
+        status: 400
+      });
     }
 
-    const allContacts = await JobSeeker.find({ contact_no: contact_no });
+    const allContacts = await JobSeeker.find({ contact_no });
     if (allContacts.length > 1) {
-      allContacts.forEach((user) => {
-        if (user._id !== existingUser._id) {
-          return res.status(400).json({
-            message: "Contact already exists",
-            success: false,
-            status: 400
-          });
-        }
-      })
+      return res.status(400).json({
+        message: "Contact already exists",
+        success: false,
+        status: 400
+      });
     }
+
+    // Handle profile picture upload
     if (req.files?.profilePicture) {
       const fileType = req.files.profilePicture[0].mimetype === "application/pdf" ? "raw" : "image";
       const localPath = req.files.profilePicture[0].path;
@@ -114,54 +112,60 @@ export const updateJobSeekers = async (req, res) => {
       profilePictureUrl = uploadResponse?.secure_url || null;
     }
 
-    console.log('req.files: ', req.files);
-    console.log(req.files);
-    
+    // Handle resume upload    
     if (req.files?.resumeUrl) {
-      const fileType = req.files.resumeUrl[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+      const fileType = req.files.resumeUrl[0].mimetype === "application/pdf" ? "raw" : "image";
       const localPath = req.files.resumeUrl[0].path;
       const uploadResponse = await uploadOnCloudinary(localPath, fileType);
-      resumeUrl = uploadResponse?.secure_url || null;
+      const secureUrl = uploadResponse.data.secure_url;
+      resumeUrl = secureUrl;
+      console.log(resumeUrl);
     }
 
-    console.log(resumeUrl);
-    
-    const updatedJobSeeker = await JobSeeker.findOneAndUpdate({ _id: existingUser._id }, {
-      name,
-      email,
-      contact_no,
-      experience,
-      profilePicture: profilePictureUrl ? profilePictureUrl : existingUser.profilePicture,
-      resumeUrl: resumeUrl ? resumeUrl : existingUser.resumeUrl,
-      AllLinks
-    }, { new: true });
+    // Update JobSeeker information in the database
+    const updatedJobSeeker = await JobSeeker.findOneAndUpdate(
+      { _id: existingUser._id },
+      {
+        name,
+        email,
+        contact_no,
+        experience,
+        profilePicture: profilePictureUrl || existingUser.profilePicture,
+        resumeUrl: resumeUrl || existingUser.resumeUrl,
+        AllLinks
+      },
+      { new: true }
+    );
 
+    // Handle case where JobSeeker was not found during update
     if (!updatedJobSeeker) {
       return res.status(404).json({
         message: "JobSeeker Not found",
         success: false,
         status: 404
-      })
+      });
     }
 
-    // const newUser = { ...updatedJobSeeker, role: "jobseeker" }; 
     const updatedJobSeekers = updatedJobSeeker.toObject();
     updatedJobSeekers.role = "jobseeker";
+
     return res.status(200).json({
-      message: "JobSeeker Updated SuccessFully..!",
+      message: "JobSeeker Updated Successfully!",
       success: true,
       status: 200,
       data: updatedJobSeekers
-    })
+    });
+
   } catch (error) {
-    console.log("Error while updating JobSeeker : ", error);
+    console.log("Error while updating JobSeeker: ", error);
     return res.status(500).json({
       message: "Internal server error",
       success: false,
       status: 500
-    })
+    });
   }
 }
+
 
 export const getAllJobs = async (req, res) => {
   try {
@@ -363,9 +367,9 @@ export const getAdminAllJobs = async (req, res) => {
   try {
     // Verify admin access
     if (!req.user?.isAdmin) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         success: false,
-        message: "Unauthorized: Only admins can access this resource" 
+        message: "Unauthorized: Only admins can access this resource"
       });
     }
 
@@ -393,7 +397,7 @@ export const getAdminAllJobs = async (req, res) => {
 
   } catch (error) {
     console.error("Error fetching jobs:", error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
