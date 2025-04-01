@@ -35,6 +35,10 @@ const jobSeekerSchema = new mongoose.Schema({
         type: String,
         default: "0"
     },
+    resumeUrl:{
+        type: String,
+        default: "No resume uploaded"
+    },
     AllLinks : {
         type : [{
             LinkLabel : {

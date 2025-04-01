@@ -54,7 +54,7 @@ export const updateJobSeekers = async (req, res) => {
   try {
     const { _id, name, email, contact_no, experience, AllLinks } = req.body;
     let profilePictureUrl = null;
-    let resume_url = null;
+    let resumeUrl = null;
 
     if (!_id || !name || !email || !contact_no || !experience) {
       return res.status(400).json({
@@ -115,22 +115,24 @@ export const updateJobSeekers = async (req, res) => {
     }
 
     console.log('req.files: ', req.files);
-
-    if (req.files?.resume_url) {
-      const fileType = req.files.resume_url[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
-      const localPath = req.files.resume_url[0].path;
+    console.log(req.files);
+    
+    if (req.files?.resumeUrl) {
+      const fileType = req.files.resumeUrl[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+      const localPath = req.files.resumeUrl[0].path;
       const uploadResponse = await uploadOnCloudinary(localPath, fileType);
-      resume_url = uploadResponse?.secure_url || null;
+      resumeUrl = uploadResponse?.secure_url || null;
     }
 
-
+    console.log(resumeUrl);
+    
     const updatedJobSeeker = await JobSeeker.findOneAndUpdate({ _id: existingUser._id }, {
       name,
       email,
       contact_no,
       experience,
       profilePicture: profilePictureUrl ? profilePictureUrl : existingUser.profilePicture,
-      resume_url: resume_url ? resume_url : existingUser.resume_url,
+      resumeUrl: resumeUrl ? resumeUrl : existingUser.resumeUrl,
       AllLinks
     }, { new: true });
 
