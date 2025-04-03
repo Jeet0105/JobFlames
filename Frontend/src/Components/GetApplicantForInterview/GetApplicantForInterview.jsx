@@ -11,6 +11,7 @@ function GetApplicantForInterview() {
     const [error, setError] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [selectedApplicant, setSelectedApplicant] = useState(null);
+    console.log(applicants);
 
     useEffect(() => {
         const fetchApplicants = async () => {
@@ -61,19 +62,10 @@ function GetApplicantForInterview() {
         setShowPopup(true);
     };
 
-    // const confirmShortlist = () => {
-    //     if (selectedApplicant) {
-    //         updateStatus(selectedApplicant.applicationId, "shortlisted");
-    //     }
-    //     setShowPopup(false);
-    //     setSelectedApplicant(null);
-    // };
-
-
     console.log(applicants)
 
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen p-6 ml-6">
             <h2 className="text-3xl font-bold text-blue text-center mb-6">Job Applicants</h2>
 
             {loading && <Loader2 className="animate-spin text-blue-500 h-10 w-10 mx-auto" />}
@@ -108,9 +100,18 @@ function GetApplicantForInterview() {
                                 <td className="py-4 px-4 text-center text-black">{app?.experience} years</td>
                                 <td className="py-4 px-4 text-center text-black">{app?.contact_no}</td> {/* Display Contact Number */}
                                 <td className="py-4 px-4 text-center">
-                                    <a href={app?.resume} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center cursor-pointer justify-center">
-                                        <FileText className="mr-1" /> View
-                                    </a>
+                                    {app?.resume === "No resume uploaded" || app?.resume === "a" || app.resume === "No Resume Url" ? (
+                                        <p>NA</p>
+                                    ) : (
+                                        <a
+                                            href={app?.resume}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:underline flex items-center cursor-pointer justify-center"
+                                        >
+                                            <FileText className="mr-1" /> View
+                                        </a>
+                                    )}
                                 </td>
                                 <td className="py-4 px-4 text-center text-gray-600">
                                     {new Date(app?.appliedAt).toLocaleDateString()} {/* Format Applied Date */}
@@ -122,7 +123,7 @@ function GetApplicantForInterview() {
                                     <button
                                         className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition disabled:opacity-50"
                                         onClick={() => handleShortlistClick(app)}
-                                        
+
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Select
@@ -144,7 +145,7 @@ function GetApplicantForInterview() {
                 </table>
             </div>
 
-            
+
 
             {showPopup && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-70 flex justify-center items-center">
@@ -153,15 +154,15 @@ function GetApplicantForInterview() {
                             Are you sure you want to proceed with interviewing this candidate?
                         </h3>
                         <div className="flex justify-center gap-3">
-                            <button 
+                            <button
                                 className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
                                 onClick={() => setShowPopup(false)}
                             >
                                 No
                             </button>
-                            <button 
+                            <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                                // onClick={confirmShortlist}
+                            // onClick={sheduleInterview}
                             >
                                 Yes
                             </button>

@@ -225,7 +225,7 @@ const getAllApplicantForInterview = async (req,res)=>{
             name: app.applicant_id?.name || "Not available",
             email: app.applicant_id?.email || "Not available",
             profilePicture: app.applicant_id?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
-            resume: app.resume || app.applicant_id?.resumeUrl || "No resume available",
+            resume: app.applicant_id?.resumeUrl || "No resume available",
             contact_no: app.applicant_id?.contact_no || "Not provided",
             experience: app.applicant_id?.experience || "Not specified",
             status: app.status,
