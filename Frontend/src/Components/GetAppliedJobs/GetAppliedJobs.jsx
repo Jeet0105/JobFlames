@@ -26,7 +26,7 @@ function GetAppliedJobs() {
     }, []);
 
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen ml-6 p-6">
             <h2 className="text-3xl font-bold text-blue-500 text-center mb-6">My Applied Jobs</h2>
 
             {loading && <Loader2 className="animate-spin text-blue-500 h-10 w-10 mx-auto" />}

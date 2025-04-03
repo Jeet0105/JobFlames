@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { User, Mail, Lock, Phone, Briefcase, Calendar, Linkedin } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -57,11 +56,11 @@ const RegisterInterviewer = () => {
 
     return (
         <div
-          className={`overflow-y-auto w-full md:w-[50%] h-full m-auto px-8 py-9 rounded-lg transition-opacity duration-700 custom-scrollbar opacity-100 dark:text-white bg-white dark:bg-gray-900`}
+          className={`pl-6 overflow-y-auto w-full md:w-[50%] h-full m-auto px-8 py-9 rounded-lg transition-opacity duration-700 custom-scrollbar opacity-100 dark:text-white bg-white dark:bg-gray-900`}
         >
           <div className="w-full h-full flex flex-col gap-6">
             <h2 className="text-[#254A74] dark:text-gray-100 text-2xl sm:text-3xl font-bold text-center">
-              Sign Up as Interviewer
+              Register Interviewer
             </h2>
             <form className="space-y-6" onSubmit={(e) => handleSubmit(e, formData)}>
               <InputField
@@ -125,7 +124,7 @@ const RegisterInterviewer = () => {
                 className="w-full bg-[#1b3453] dark:bg-gray-700 text-white p-4 rounded-lg mt-4 hover:bg-[#254A74] dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-300 transition duration-200 ease-in-out"
                 disabled={loading}
               >
-                {loading ? "Loading..." : "Register as Interviewer"}
+                {loading ? "Loading..." : "Register Interviewer"}
               </button>
             </form>
           </div>

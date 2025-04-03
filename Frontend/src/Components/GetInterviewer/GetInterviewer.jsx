@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Loader2, FileText, Link2, Search } from "lucide-react";
-import { FaGithub, FaLink, FaLinkedin } from "react-icons/fa";
+import { Loader2, Search } from "lucide-react";
+import { FaLinkedin } from "react-icons/fa";
 import { toast } from 'react-toastify';
 
 function GetInterviewer() {
@@ -49,7 +49,7 @@ function GetInterviewer() {
     }, [searchTerm, interviewer]);
 
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen p-6 ml-6">
             <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Registered Job Seekers</h2>
 
             {/* Search Bar - Added this section while keeping rest of UI identical */}

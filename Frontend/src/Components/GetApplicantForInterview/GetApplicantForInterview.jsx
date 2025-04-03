@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Loader2, CheckCircle, XCircle, FileText } from "lucide-react";
+import { Loader2, CheckCircle, FileText } from "lucide-react";
 import { toast } from "react-toastify";
 
 function GetApplicantForInterview() {

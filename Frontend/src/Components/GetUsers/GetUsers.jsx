@@ -43,7 +43,7 @@ function GetJobSeekers() {
     }, [searchTerm, jobSeekers]);
 
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen p-6 ml-6">
             <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Registered Job Seekers</h2>
 
             {/* Search Bar - Added this section while keeping rest of UI identical */}
@@ -122,7 +122,7 @@ function GetJobSeekers() {
                                     )}
                                 </td>
                                 <td className="py-4 px-4 text-center text-black">
-                                    {seeker.resumeUrl && seeker.resumeUrl !== "No Resume Url" && seeker.resumeUrl !== "a" ? (
+                                    {seeker.resumeUrl && seeker.resumeUrl !== "No Resume Url" ? (
                                         <a
                                             href={seeker.resumeUrl}
                                             target="_blank"

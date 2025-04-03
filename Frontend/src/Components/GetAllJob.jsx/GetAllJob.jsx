@@ -96,7 +96,7 @@ function GetAllJob() {
                             </p>
                         </div>
                     ) : (
-                        <div className="bg-white shadow rounded-lg overflow-hidden">
+                        <div className="bg-white shadow rounded-lg overflow-hidden ml-6">
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-blue-500 text-white">

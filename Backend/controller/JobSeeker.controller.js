@@ -109,7 +109,7 @@ export const updateJobSeekers = async (req, res) => {
       const fileType = req.files.profilePicture[0].mimetype === "application/pdf" ? "raw" : "image";
       const localPath = req.files.profilePicture[0].path;
       const uploadResponse = await uploadOnCloudinary(localPath, fileType);
-      profilePictureUrl = uploadResponse?.secure_url || null;
+      profilePictureUrl = uploadResponse.data.secure_url || null;
     }
 
     // Handle resume upload    

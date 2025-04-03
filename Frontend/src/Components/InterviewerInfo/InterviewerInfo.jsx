@@ -1,4 +1,3 @@
-import React from "react";
 import { FaEnvelope, FaPhone, FaLinkedin, FaStar, FaEdit } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +21,7 @@ function InterviewerInfo() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-200 dark:from-gray-900 dark:to-gray-800 px-6 py-5">
+        <div className="min-h-screen flex items-center justify-center ml-6 px-6 py-5">
             <div className="w-full max-w-3xl bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-10 border border-gray-200 dark:border-gray-700 relative">
 
                 {/* Header: Profile Picture, Name, Experience, Rating */}

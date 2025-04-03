@@ -44,7 +44,7 @@ function GetCompanies() {
     }, [searchTerm, companies]);
 
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen p-6 ml-6">
             <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Registered Companies</h2>
 
             {/* Search Bar - Added this section while keeping rest of UI identical */}

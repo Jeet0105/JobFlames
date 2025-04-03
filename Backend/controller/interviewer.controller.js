@@ -103,7 +103,7 @@ const updateInterviewer = async (req, res) => {
         }
 
         if (req.files?.profilePicture) {
-            const fileType = req.files.profilePicture[0].mimetype === "application/pdf" ? "raw" : "image"; // FIXED
+            const fileType = req.files.profilePicture[0].mimetype === "application/pdf" ? "raw" : "image";
             const localPath = req.files.profilePicture[0].path;
             const uploadResponse = await uploadOnCloudinary(localPath, fileType);
             logoUrl = uploadResponse?.secure_url || null;
@@ -153,7 +153,6 @@ const updateInterviewer = async (req, res) => {
 
 const getAllJobsForInterviewer = async (req,res)=>{
     try {
-        // Verify admin access
         if (req.user?.role !== 'interviewer') {
           return res.status(403).json({ 
             success: false,
@@ -166,9 +165,9 @@ const getAllJobsForInterviewer = async (req,res)=>{
         const jobs = await Job.find()
           .populate({
             path: "company_id",
-            select: "name email logo contact_no", // Include essential company info
+            select: "name email logo contact_no",
           })
-          .sort({ createdAt: -1 }) // Sort by newest first
+          .sort({ createdAt: -1 })
     
         if (!jobs.length) {
           return res.status(404).json({
@@ -197,8 +196,6 @@ const getAllJobsForInterviewer = async (req,res)=>{
         });
       }
 }
-
-
 
 const getAllApplicantForInterview = async (req,res)=>{
     const { id } = req.params;

@@ -98,7 +98,7 @@ export default function CreateSubscriptionPlan() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center bg-gray-100 dark:bg-gray-900 p-6">
+        <div className="min-h-screen flex flex-col items-center ml-6 bg-gray-100 dark:bg-gray-900 p-6">
             {/* Background Image Upload (Full Width) */}
             <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-8 mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 text-center mb-10">

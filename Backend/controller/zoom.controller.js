@@ -2,6 +2,7 @@ import axios from "axios";
 import Job from "../model/Job.modem.js";
 import JobSeeker from "../model/JobSeeker.model.js";
 import Interviewer from "../model/Interviewer.model.js";
+import Interview from "../model/interviews.model.js";
 
 const getAuthorizedToken = async (req, res) => {
     try {

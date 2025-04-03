@@ -34,7 +34,7 @@ function ScheduleInterview() {
     }, [id]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center py-10">
+        <div className="min-h-screen flex flex-col items-center py-10 ml-6">
             <h2 className="text-4xl font-extrabold text-blue-600 mb-10">Select Job For Interview</h2>
 
             {loading && <Loader2 className="animate-spin text-blue-500 h-12 w-12" />}
