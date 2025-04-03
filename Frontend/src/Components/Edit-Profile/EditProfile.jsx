@@ -7,6 +7,8 @@ import { signInSuccess } from '../../Redux/user/userSlice';
 import { toast } from 'react-toastify';
 
 function EditProfile() {
+  console.log("AA");
+    
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);

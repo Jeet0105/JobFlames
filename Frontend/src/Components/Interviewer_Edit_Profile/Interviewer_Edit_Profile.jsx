@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInSuccess } from '../../Redux/user/userSlice';
 import { useNavigate } from 'react-router';
@@ -10,7 +9,7 @@ function InterviewerEditProfile() {
     const currentUser = useSelector((state) => state.user.currentUser);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    
     const [formData, setFormData] = useState({
         name: currentUser?.name || '',
         email: currentUser?.email || '',

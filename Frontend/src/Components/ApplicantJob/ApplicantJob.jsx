@@ -46,9 +46,6 @@ function ApplicantJob() {
         }
     };
 
-
-    console.log(applicants)
-
     return (
         <div className="min-h-screen p-6">
             <h2 className="text-3xl font-bold text-blue text-center mb-6">Job Applicants</h2>
@@ -60,7 +57,7 @@ function ApplicantJob() {
             )}
 
             <div className="overflow-x-auto">
-                <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <table className="w-full shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-blue-500 text-white">
                         <tr>
                             <th className="py-3 px-4">Applicant</th>

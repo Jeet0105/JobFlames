@@ -40,21 +40,17 @@ import GetApplicantForInterview from './Components/GetApplicantForInterview/GetA
 // Route protection components
 const ProtectedRoute = ({ role, redirectPath = '/', children }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
-  
   if (!currentUser || (role && currentUser.role !== role)) {
     return <Navigate to={redirectPath} replace />;
   }
-
   return children ? children : <Outlet />;
 };
 
 const AdminRoute = ({ children }) => {
   const currentUser = useSelector((state) => state.user.currentUser);
-  
   if (!currentUser?.isAdmin) {
     return <Navigate to="/" replace />;
   }
-
   return children ? children : <Outlet />;
 };
 
@@ -70,30 +66,76 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/job/:id" element={<JobDetail />} />
+        <Route path="/showjob" element={<ShowJobs />} />
 
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
+          {/* Profile routes */}
           <Route path="/profile" element={<Profile />}>
-            <Route 
-              index 
+            <Route
+              index
               element={
-                currentUser?.role === "jobseeker" ? (
-                  <Navigate to="JobSeeker" replace />
-                ) : (
-                  <Navigate to="Company" replace />
-                )
-              } 
+                currentUser?.role === "jobseeker" ? <Navigate to="JobSeeker" replace /> :
+                currentUser?.role === "interviewer" ? <Navigate to="Interviewer" replace /> :
+                <Navigate to="Company" replace />
+              }
             />
             <Route path="JobSeeker" element={<JobSeekerInfo />} />
             <Route path="Company" element={<CompanyInfo />} />
-            <Route path="edit-profile/:id" element={<EditProfile />} />
+            <Route path="Interviewer" element={<InterviewerInfo />} />
+            <Route path="Create-Subscription" element={<CreateSubscriptionPlan />} />
+            
+            {/* Edit profile route */}
+            <Route 
+              path="edit-profile/:id" 
+              element={
+                currentUser?.role === "company" ? <Com_Edit_Profile /> :
+                currentUser?.role === "interviewer" ? <InterviewerEditProfile /> :
+                currentUser?.role === "jobseeker" ? <EditProfile /> :
+                <Navigate to="/profile" replace />
+              }
+            />
+
+            {/* Company-specific profile routes */}
+            {currentUser?.role === "company" && (
+              <>
+                <Route path="get-my-job/:id" element={<GetCompanyJob />} />
+                <Route path="myjobdetail/:id" element={<ApplicantJob />} />
+              </>
+            )}
+
+            {/* Admin-specific profile routes */}
+            {currentUser?.isAdmin && (
+              <>
+                <Route path="getallcompanies" element={<GetCompanies />} />
+                <Route path="getallusers" element={<GetJobSeekers />} />
+                <Route path="getallapplications" element={<GetApplications />} />
+                <Route path="getalljobs" element={<GetAllJob />} />
+                <Route path="getallinterviewers" element={<GetInterviewer />} />
+                <Route path="registerInterviewer" element={<RegisterInterviewer />} />
+                <Route path="createSubscription" element={<CreateSubscriptionPlan />} />
+                <Route path="subscriptionPlan" element={<SubscriptionPlans />} />
+              </>
+            )}
+
+            {/* Interviewer-specific profile routes */}
+            {currentUser?.role === "interviewer" && (
+              <>
+                <Route path="myjobdetail/:id" element={<GetApplicantForInterview />} />
+                <Route path="scheduleInterview" element={<ScheduleInterview />} />
+              </>
+            )}
+
+            {/* Jobseeker-specific profile routes */}
+            {currentUser?.role === "jobseeker" && (
+              <Route path="getappiedjobs" element={<GetAppliedJobs />} />
+            )}
           </Route>
 
           {/* Jobseeker specific routes */}
           <Route element={<ProtectedRoute role="jobseeker" />}>
-            <Route path="/showjob" element={<ShowJobs />} />
             <Route path="/getappiedjobs" element={<AppliedJobs />} />
-            <Route path="/job/:id" element={<JobDetail />} />
           </Route>
 
           {/* Company specific routes */}
@@ -101,6 +143,7 @@ function App() {
             <Route path="/createjob" element={<CreateJob />} />
             <Route path="/get-my-job/:id" element={<CompanyJobs />} />
             <Route path="/myjobdetail/:id" element={<ApplicantJob />} />
+            <Route path="/createjobcomp" element={<CreateJobCom />} />
           </Route>
 
           {/* Admin specific routes */}
@@ -115,66 +158,6 @@ function App() {
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
-=======
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/createjob' element={<CreateJobCom />} />
-        <Route path='/showjob' element={<ShowJobs />} />
-        <Route path='/profile' element={<Profile />} >
-          {currentUser?.role === "jobseeker" ? (
-            <Route index element={<Navigate to="JobSeeker" />} />
-          ) : currentUser?.role === "interviewer" ? (
-            <Route index element={<Navigate to="Interviewer" />} />
-          ) : (
-            <Route index element={<Navigate to="Company" />} />
-          )}
-          <Route path='JobSeeker' element={<JobSeekerInfo />} />
-          <Route path='Company' element={<CompanyInfo />} />
-          <Route path='Interviewer' element={<InterviewerInfo />} />
-          <Route path='Create-Subscription' element={<CreateSubscriptionPlan />} />
-          <Route path='edit-profile/:id' element={currentUser?.role === "jobseeker" ? (<EditProfile />) : currentUser?.role === "interviewer" ? (<InterviewerEditProfile/>) : (<Com_Edit_Profile />)} />
-          {currentUser?.role === "company" && (
-            <Route path="get-my-job/:id" element={<GetCompanyJob />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="getallcompanies" element={<GetCompanies />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="getallusers" element={<GetJobSeekers />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="getallapplications" element={<GetApplications />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="getalljobs" element={<GetAllJob />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="getallinterviewers" element={<GetInterviewer />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="registerInterviewer" element={<RegisterInterviewer />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="createSubscription" element={<CreateSubscriptionPlan />} />
-          )}
-          {currentUser?.isAdmin && (
-            <Route path="subscriptionPlan" element={<SubscriptionPlans />} />
-          )}
-          {currentUser?.role === "company" && (
-            <Route path="myjobdetail/:id" element={<ApplicantJob />} />
-          )}
-          {currentUser?.role === "interviewer" && (
-            <Route path="myjobdetail/:id" element={<GetApplicantForInterview />} />
-          )}
-          {currentUser?.role === "interviewer" && (
-            <Route path='scheduleInterview' element={<ScheduleInterview />} />
-          )}
-          {currentUser?.role === "jobseeker" && (
-            <Route path='getappiedjobs' element={<GetAppliedJobs />} />
-          )}
-        </Route>
-        <Route path="/job/:id" element={<JobDetail />} />
       </Routes>
       <Footer />
     </BrowserRouter>

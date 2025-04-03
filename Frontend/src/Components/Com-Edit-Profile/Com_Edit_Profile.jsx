@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
