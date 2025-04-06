@@ -16,7 +16,6 @@ import RegisterInterviewer from './Pages/RegisterInterviewer';
 import { useSelector } from 'react-redux';
 import CompanyJobs from './Pages/CompanyJobs';
 import ApplicantJob from './Components/ApplicantJob/ApplicantJob';
-import AppliedJobs from './Pages/AppliedJobs';
 import ListCompanies from './Pages/ListCompanies';
 import ListUsers from './Pages/ListUsers';
 import ListApplications from './Pages/ListApplications';
@@ -36,6 +35,7 @@ import InterviewerInfo from './Components/InterviewerInfo/InterviewerInfo';
 import InterviewerEditProfile from './Components/Interviewer_Edit_Profile/Interviewer_Edit_Profile';
 import ScheduleInterview from './Components/ScheduleInterview/ScheduleInterview';
 import GetApplicantForInterview from './Components/GetApplicantForInterview/GetApplicantForInterview';
+import GetScheduledInterwiew from './Components/GetScheduledInterwiew/GetScheduledInterwiew';
 
 // Route protection components
 const ProtectedRoute = ({ role, redirectPath = '/', children }) => {
@@ -124,6 +124,7 @@ function App() {
               <>
                 <Route path="myjobdetail/:id" element={<GetApplicantForInterview />} />
                 <Route path="scheduleInterview" element={<ScheduleInterview />} />
+                <Route path="getScheduleInterview" element={<GetScheduledInterwiew />} />
               </>
             )}
 

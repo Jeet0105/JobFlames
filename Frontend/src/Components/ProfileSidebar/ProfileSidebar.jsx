@@ -78,9 +78,17 @@ function ProfileSidebar() {
                 {currentUser?.role === "company" && (
                     <SidebarItem to='/createjob' icon={FaPlusCircle} text="Create Jobs" />
                 )}
+
+                {/* Schedule Interview - interviewer */}
                 {currentUser?.role === "interviewer" && (
                     <SidebarItem to='/profile/scheduleInterview' icon={FaCalendarCheck} text="Schedule Interview" />
                 )}
+
+                {/* Get Schedule Interview - interviewer */}
+                {currentUser?.role === "interviewer" && (
+                    <SidebarItem to='/profile/getScheduleInterview' icon={FaCalendarCheck} text="Get Scheduled Interview" />
+                )}
+
                 {currentUser?.role === "jobseeker" && !currentUser?.isAdmin && (
                     <SidebarItem to='/profile/getappiedjobs' icon={FaCheckCircle} text="Applied Jobs" />
                 )}
