@@ -1,11 +1,12 @@
 import Application from '../model/Application.model.js';
 import Interviewer from '../model/Interviewer.model.js';
+import Interview from '../model/interviews.model.js';
 import Job from '../model/Job.modem.js';
 import JobSeeker from '../model/JobSeeker.model.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 
-const getallinterviewer = async (req, res) => {
+export const getallinterviewer = async (req, res) => {
     const userId = req.user.id;
 
     if (!userId) {
@@ -56,7 +57,7 @@ const getallinterviewer = async (req, res) => {
 }
 
 
-const updateInterviewer = async (req, res) => {
+export const updateInterviewer = async (req, res) => {
     const { name, email, phone, specialization, experience, linkedin } = req.body;
     const interviewer_id = req.user.id;
     let logoUrl = null;
@@ -140,64 +141,63 @@ const updateInterviewer = async (req, res) => {
 
 
     } catch (error) {
-        console.log("Error while updating interviewer : ",error);
+        console.log("Error while updating interviewer : ", error);
         return res.status(500).json({
-            message : "Internal server error",
-            status : 500,
-            success : false
+            message: "Internal server error",
+            status: 500,
+            success: false
         })
     }
 
 }
 
-
-const getAllJobsForInterviewer = async (req,res)=>{
+export const getAllJobsForInterviewer = async (req, res) => {
     try {
         if (req.user?.role !== 'interviewer') {
-          return res.status(403).json({ 
-            success: false,
-            status : 403,
-            message: "Unauthorized: Only Interviewer can access this resource" 
-          });
+            return res.status(403).json({
+                success: false,
+                status: 403,
+                message: "Unauthorized: Only Interviewer can access this resource"
+            });
         }
-    
+
         // Get all jobs with populated company details
         const jobs = await Job.find()
-          .populate({
-            path: "company_id",
-            select: "name email logo contact_no",
-          })
-          .sort({ createdAt: -1 })
-    
+            .populate({
+                path: "company_id",
+                select: "name email logo contact_no",
+            })
+            .sort({ createdAt: -1 })
+
         if (!jobs.length) {
-          return res.status(404).json({
-            success: true,
-            message: "No jobs found",
-            status : 404,
-            data: [],
-            count: 0
-          });
+            return res.status(404).json({
+                success: true,
+                message: "No jobs found",
+                status: 404,
+                data: [],
+                count: 0
+            });
         }
-    
+
         return res.status(200).json({
-            message : "Jobs Fetched successFully...!",
-            success : true,
-            status : 200,
-            count : jobs.length,
-            data : jobs
+            message: "Jobs Fetched successFully...!",
+            success: true,
+            status: 200,
+            count: jobs.length,
+            data: jobs
         });
-    
-      } catch (error) {
+
+    } catch (error) {
         console.error("Error fetching jobs:", error);
-        return res.status(500).json({ 
-          success: false,
-          message: "Internal server error",
-          error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
-      }
+    }
 }
 
-const getAllApplicantForInterview = async (req,res)=>{
+export const getAllApplicantForInterview = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -207,16 +207,16 @@ const getAllApplicantForInterview = async (req,res)=>{
                 select: "name email profilePicture resumeUrl contact_no experience"
             })
             .select("status resume createdAt applicant_id")
-            .sort({ createdAt: -1 }); 
+            .sort({ createdAt: -1 });
 
         console.log('Shortlisted applications: ', applications);
 
         if (!applications.length) {
-            return res.status(404).json({ 
+            return res.status(404).json({
                 message: "No shortlisted applicants found for this job.",
-                status : 404,
-                success : false
-         });
+                status: 404,
+                success: false
+            });
         }
 
 
@@ -234,22 +234,54 @@ const getAllApplicantForInterview = async (req,res)=>{
         }));
 
         res.status(200).json({
-            message : "Applicant fetch successFully..!",
-            status : 200,
-            success : true,
-            count : formattedApplicants.length,
-            data : formattedApplicants
+            message: "Applicant fetch successFully..!",
+            status: 200,
+            success: true,
+            count: formattedApplicants.length,
+            data: formattedApplicants
         });
     } catch (error) {
         console.error("Error fetching shortlisted applicants:", error);
         res.status(500).json({
             message: "Internal server error.",
-            status : 500,
-            success : false,
+            status: 500,
+            success: false,
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 }
 
+export const getAllMyScheduledInterview = async (req, res) => {
+    const id = req.user.id;
+    try {
+        const ScheduledInterviews = await Interview.find({
+            interviewer_id: id,
+            status: "scheduled"
+        })
+            .populate({
+                path: "jobseeker_id",
+                select: "name email profilePicture resumeUrl contact_no experience"
+            })
+            .populate({
+                path: "job_id",
+                select: "title company location"
+            });
 
-export { getallinterviewer,updateInterviewer,getAllJobsForInterviewer,getAllApplicantForInterview }
+        if (!ScheduledInterviews || ScheduledInterviews.length === 0) {
+            return res.status(404).json({ message: "No Scheduled Interview", success: false });
+        }
+
+        return res.status(200).json({
+            message: "Scheduled Interviews",
+            data: ScheduledInterviews,
+            success: true
+        });
+    } catch (error) {
+        console.error("Error fetching scheduled interviews:", error);
+        res.status(500).json({
+            message: "Internal server error.",
+            status: 500,
+            success: false,
+        });
+    }
+};
