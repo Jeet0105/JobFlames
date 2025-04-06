@@ -206,7 +206,7 @@ const getAllApplicantForInterview = async (req,res)=>{
                 path: "applicant_id",
                 select: "name email profilePicture resumeUrl contact_no experience"
             })
-            .select("status resume createdAt")
+            .select("status resume createdAt applicant_id")
             .sort({ createdAt: -1 }); 
 
         console.log('Shortlisted applications: ', applications);
@@ -221,7 +221,8 @@ const getAllApplicantForInterview = async (req,res)=>{
 
 
         const formattedApplicants = applications.map(app => ({
-            applicationId: app._id, 
+            applicationId: app._id,
+            jseeker_id: app.applicant_id?._id || "Not available",
             name: app.applicant_id?.name || "Not available",
             email: app.applicant_id?.email || "Not available",
             profilePicture: app.applicant_id?.profilePicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",

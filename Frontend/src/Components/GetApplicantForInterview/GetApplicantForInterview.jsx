@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Loader2, CheckCircle, FileText } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSelector } from 'react-redux';
 
 function GetApplicantForInterview() {
     const { id } = useParams(); // Job ID
@@ -10,9 +11,10 @@ function GetApplicantForInterview() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
-    const [selectedApplicant, setSelectedApplicant] = useState(null);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const [jobseeker_id, setJobseeker_id] = useState(null);
     console.log(applicants);
-
+    
     useEffect(() => {
         const fetchApplicants = async () => {
             try {
@@ -21,7 +23,6 @@ function GetApplicantForInterview() {
                 });
                 if (response?.data?.success) {
                     setApplicants(response.data.data);
-                    console.log('response.data.data: ', response.data.data);
                 }
                 else {
                     toast.error(response?.data?.message);
@@ -44,7 +45,6 @@ function GetApplicantForInterview() {
                 { status: newStatus },
                 { withCredentials: true }
             );
-
             setApplicants((prevApplicants) =>
                 prevApplicants.map((app) =>
                     app.applicationId === applicantId ? { ...app, status: newStatus } : app
@@ -56,14 +56,45 @@ function GetApplicantForInterview() {
         }
     };
 
+    const handleScheduleInterview = async () => {
+        try {
+            setShowPopup(false);
+            // Step 1: Get Zoom Access Token
+            const resToken = await axios.get('http://localhost:3000/api/v1/zoom/getAuthorization');
+            const accessToken = resToken.data.data;
 
-    const handleShortlistClick = (applicant) => {
-        setSelectedApplicant(applicant);
-        setShowPopup(true);
+            // Step 2: Set startTime to 3 hours later
+            const startTime = new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString();
+
+            // Step 3: Create Meeting
+            const meetingPayload = {
+                accessToken,
+                topic: "Interview",
+                startTime, // 3 hours from now
+                duration: 30, // 30 minutes interview
+                job_id: id,
+                jobseeker_id,
+                interviewer_id: currentUser._id
+            };
+            console.log(meetingPayload);
+            
+            const resMeeting = await axios.post('http://localhost:3000/api/v1/zoom/create-zoom-meeting', meetingPayload);
+
+            console.log("Meeting Created:", resMeeting);
+            updateStatus(jobseeker_id,"interview")
+            toast.success("Meeting scheduled successfully ✅");
+
+        } catch (error) {
+            console.error("Error:", error.response?.data || error.message);
+            toast.error(error.response?.data?.message || "Failed to schedule interview.");
+        }
     };
-
-    console.log(applicants)
-
+    const handleData = (jsid) =>{
+        console.log("aa",jsid);
+        
+        setShowPopup(true)
+        setJobseeker_id(jsid)
+    }
     return (
         <div className="min-h-screen p-6 ml-6">
             <h2 className="text-3xl font-bold text-blue text-center mb-6">Job Applicants</h2>
@@ -101,7 +132,7 @@ function GetApplicantForInterview() {
                                 <td className="py-4 px-4 text-center text-black">{app?.contact_no}</td> {/* Display Contact Number */}
                                 <td className="py-4 px-4 text-center">
                                     {app?.resume === "No resume uploaded" || app?.resume === "a" || app.resume === "No Resume Url" ? (
-                                        <p>NA</p>
+                                        <p className="text-red-500">NA</p>
                                     ) : (
                                         <a
                                             href={app?.resume}
@@ -121,22 +152,12 @@ function GetApplicantForInterview() {
                                 </td>
                                 <td className="py-4 px-4 flex gap-2 justify-center">
                                     <button
-                                        className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition disabled:opacity-50"
-                                        onClick={() => handleShortlistClick(app)}
-
+                                        className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition disabled:opacity-50 flex justify-center items-center gap-2"
+                                        onClick={()=>handleData(app?.jseeker_id)}
                                     >
                                         <CheckCircle className="w-4 h-4" />
-                                        Select
+                                        Schedule Interview
                                     </button>
-
-                                    {/* <button
-                                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition disabled:opacity-50"
-                                        onClick={() => updateStatus(app?.applicationId, "rejected")}
-                                        disabled={app?.status !== "applied"}
-                                    >
-                                        <XCircle className="w-4 h-4" />
-                                        Reject
-                                    </button> */}
                                 </td>
                             </tr>
                         ))}
@@ -162,7 +183,7 @@ function GetApplicantForInterview() {
                             </button>
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                            // onClick={sheduleInterview}
+                                onClick={() => handleScheduleInterview()}
                             >
                                 Yes
                             </button>

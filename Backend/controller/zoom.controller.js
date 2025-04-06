@@ -3,13 +3,14 @@ import Job from "../model/Job.modem.js";
 import JobSeeker from "../model/JobSeeker.model.js";
 import Interviewer from "../model/Interviewer.model.js";
 import Interview from "../model/interviews.model.js";
+import moment from 'moment';
 
 const getAuthorizedToken = async (req, res) => {
   try {
     const tokenUrl = "https://zoom.us/oauth/token?grant_type=account_credentials&account_id=" + process.env.ZOOM_ACCOUNT_ID;
-
+    console.log("TokURl: ",tokenUrl);
     const authString = Buffer.from(`${process.env.ZOOM_CLIENTID}:${process.env.ZOOM_CLIENTSECRET}`).toString("base64");
-
+    console.log(authString);
     const response = await axios.post(tokenUrl, null, {
       headers: {
         Authorization: `Basic ${authString}`,
@@ -43,7 +44,8 @@ const getAuthorizedToken = async (req, res) => {
 };
 
 const createZoomMeeting = async (req, res) => {
-
+  console.log(req.body);
+  
   const { accessToken, topic, startTime, duration, job_id, jobseeker_id, interviewer_id } = req.body;
 
   try {
@@ -124,7 +126,8 @@ const createZoomMeeting = async (req, res) => {
       interview_date: startTime,
       start_url: response?.data?.start_url
     });
-
+    console.log("S",response?.data?.start_url);
+    
     if (!interviewss) {
       return res.status(500).json({
         message: "something went wrong",

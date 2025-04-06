@@ -27,7 +27,7 @@ function JobDetail() {
     fetchJobDetail();
   }, []);
 
-  const handleApply = async (job_id) => {
+  const handleApply = async () => {
     try {
       await axios.post(`http://localhost:3000/api/v1/application/apply/${id}`, {}, { withCredentials: true });
       setMessage({ type: "success", text: "Application submitted successfully!" });

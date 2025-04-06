@@ -94,7 +94,7 @@ function Com_Edit_Profile() {
     if (currentUser?.role === "company") {
       console.log("in if statement")
       setLoading(true);
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/v1/company/updateCompany`,{
+      await axios.put(`http://localhost:3000/api/v1/company/updateCompany`,{
         name : formData?.name,
         email : formData?.email,
         profilePicture : formData?.profilePicture,

@@ -133,11 +133,6 @@ function App() {
             )}
           </Route>
 
-          {/* Jobseeker specific routes */}
-          <Route element={<ProtectedRoute role="jobseeker" />}>
-            <Route path="/getappiedjobs" element={<AppliedJobs />} />
-          </Route>
-
           {/* Company specific routes */}
           <Route element={<ProtectedRoute role="company" />}>
             <Route path="/createjob" element={<CreateJob />} />

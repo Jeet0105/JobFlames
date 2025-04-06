@@ -17,11 +17,10 @@ export const apply = async (req, res) => {
         }
 
         const jobseeker = await JobSeeker.findById(jobseeker_id);
-        console.log('jobseeker: ', jobseeker);
         if (!jobseeker) {
             return res.status(404).json({ message: "Job seeker not found" });
         }
-        if (!jobseeker.resumeUrl) {
+        if (jobseeker.resumeUrl === "No resume uploaded") {
             return res.status(400).json({ message: "Resume is required to apply for this job" });
         }
 

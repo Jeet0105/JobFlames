@@ -1,4 +1,3 @@
-import React from 'react'
 import { FaEdit, FaEnvelope, FaPhone, FaGlobe, FaMapMarkerAlt, FaGithub, FaLinkedin, FaLink } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";

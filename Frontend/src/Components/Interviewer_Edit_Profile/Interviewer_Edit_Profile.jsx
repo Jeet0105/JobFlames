@@ -53,7 +53,7 @@ function InterviewerEditProfile() {
                 formDataToSend.append(key, value);
             });
 
-            const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/v1/interviewer/updateInterviewer`, formDataToSend, {
+            const response = await axios.put(`http://localhost:3000/api/v1/interviewer/updateInterviewer`, formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' },
                 withCredentials: true,
             });
