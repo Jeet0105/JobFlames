@@ -13,7 +13,7 @@ function GetApplicantForInterview() {
     const [showPopup, setShowPopup] = useState(false);
     const currentUser = useSelector((state) => state.user.currentUser);
     const [jobseeker_id, setJobseeker_id] = useState(null);
-    console.log(applicants);
+    const [appid,setAppid] = useState (null);
     
     useEffect(() => {
         const fetchApplicants = async () => {
@@ -38,16 +38,16 @@ function GetApplicantForInterview() {
         fetchApplicants();
     }, [id]);
 
-    const updateStatus = async (applicantId, newStatus) => {
+    const updateStatus = async (newStatus) => {
         try {
             const response = await axios.put(
-                `http://localhost:3000/api/v1/company/update-status/${applicantId}`,
+                `http://localhost:3000/api/v1/company/update-status/${appid}`,
                 { status: newStatus },
                 { withCredentials: true }
             );
             setApplicants((prevApplicants) =>
                 prevApplicants.map((app) =>
-                    app.applicationId === applicantId ? { ...app, status: newStatus } : app
+                    app.applicationId === appid ? { ...app, status: newStatus } : app
                 )
             );
             toast.success(response.data.message);
@@ -81,7 +81,7 @@ function GetApplicantForInterview() {
             const resMeeting = await axios.post('http://localhost:3000/api/v1/zoom/create-zoom-meeting', meetingPayload);
 
             console.log("Meeting Created:", resMeeting);
-            updateStatus(jobseeker_id,"interview")
+            updateStatus("interview")
             toast.success("Meeting scheduled successfully ✅");
 
         } catch (error) {
@@ -89,9 +89,8 @@ function GetApplicantForInterview() {
             toast.error(error.response?.data?.message || "Failed to schedule interview.");
         }
     };
-    const handleData = (jsid) =>{
-        console.log("aa",jsid);
-        
+    const handleData = (jsid,appid) =>{
+        setAppid(appid);
         setShowPopup(true)
         setJobseeker_id(jsid)
     }
@@ -153,7 +152,7 @@ function GetApplicantForInterview() {
                                 <td className="py-4 px-4 flex gap-2 justify-center">
                                     <button
                                         className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition disabled:opacity-50 flex justify-center items-center gap-2"
-                                        onClick={()=>handleData(app?.jseeker_id)}
+                                        onClick={()=>handleData(app?.jseeker_id,app?.applicationId)}
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Schedule Interview

@@ -267,7 +267,7 @@ export const getApplicantsForJob = async (req, res) => {
 export const changeStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
-
+        
     // Validate if the provided status is allowed
     const allowedStatuses = ["applied", "shortlisted", "interview", "hired", "rejected"];
     if (!allowedStatuses.includes(status)) {
