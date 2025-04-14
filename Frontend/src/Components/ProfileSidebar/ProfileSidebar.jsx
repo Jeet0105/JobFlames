@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { HiUser,HiArrowSmRight } from "react-icons/hi";
 import { 
     FaUsers, FaUserTie, FaBriefcase, FaFileAlt, FaUserPlus, 
-    FaRegCreditCard, FaBuilding, FaClipboardList, FaPlusCircle, FaCheckCircle, FaCalendarCheck 
+    FaBuilding, FaClipboardList, FaPlusCircle, FaCheckCircle, FaCalendarCheck 
   } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -63,12 +63,12 @@ function ProfileSidebar() {
                 )}
 
                 {/* create subscription - only for admin */}
-                {currentUser?.isAdmin && (
+                {/* {currentUser?.isAdmin && (
                     <SidebarItem to="/profile/createSubscription" icon={FaRegCreditCard} text="Create Subscription" />
                 )}
                 {currentUser?.isAdmin && (
                     <SidebarItem to="/profile/subscriptionPlan" icon={FaRegCreditCard} text="Subscription Plans" />
-                )}
+                )} */}
                 {/* Job Listings - Only for Company */}
                 {currentUser?.role === "company" && (
                     <SidebarItem to={`/profile/get-my-job/${currentUser?._id}`} icon={FaClipboardList} text="Listed Jobs" />
