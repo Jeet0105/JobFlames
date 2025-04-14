@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Loader2, CheckCircle, FileText } from "lucide-react";
 import { toast } from "react-toastify";
-import { useSelector } from 'react-redux';
 
 function GetApplicantForInterview() {
     const { id } = useParams(); // Job ID
@@ -11,9 +10,9 @@ function GetApplicantForInterview() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
-    const currentUser = useSelector((state) => state.user.currentUser);
     const [jobseeker_id, setJobseeker_id] = useState(null);
     const [appid,setAppid] = useState (null);
+    const navigate = useNavigate();
     
     useEffect(() => {
         const fetchApplicants = async () => {
@@ -38,56 +37,9 @@ function GetApplicantForInterview() {
         fetchApplicants();
     }, [id]);
 
-    const updateStatus = async (newStatus) => {
-        try {
-            const response = await axios.put(
-                `http://localhost:3000/api/v1/company/update-status/${appid}`,
-                { status: newStatus },
-                { withCredentials: true }
-            );
-            setApplicants((prevApplicants) =>
-                prevApplicants.map((app) =>
-                    app.applicationId === appid ? { ...app, status: newStatus } : app
-                )
-            );
-            toast.success(response.data.message);
-        } catch (err) {
-            toast.error(err.response?.data?.message || "Failed to update status.");
-        }
-    };
-
     const handleScheduleInterview = async () => {
-        try {
-            setShowPopup(false);
-            // Step 1: Get Zoom Access Token
-            const resToken = await axios.get('http://localhost:3000/api/v1/zoom/getAuthorization');
-            const accessToken = resToken.data.data;
-
-            // Step 2: Set startTime to 3 hours later
-            const startTime = new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString();
-
-            // Step 3: Create Meeting
-            const meetingPayload = {
-                accessToken,
-                topic: "Interview",
-                startTime, // 3 hours from now
-                duration: 30, // 30 minutes interview
-                job_id: id,
-                jobseeker_id,
-                interviewer_id: currentUser._id
-            };
-            console.log(meetingPayload);
-            
-            const resMeeting = await axios.post('http://localhost:3000/api/v1/zoom/create-zoom-meeting', meetingPayload);
-
-            console.log("Meeting Created:", resMeeting);
-            updateStatus("interview")
-            toast.success("Meeting scheduled successfully ✅");
-
-        } catch (error) {
-            console.error("Error:", error.response?.data || error.message);
-            toast.error(error.response?.data?.message || "Failed to schedule interview.");
-        }
+        navigate(`/meetingDetail?jsid=${jobseeker_id}&jobid=${id}&appid=${appid}`);
+        setShowPopup(false);
     };
     const handleData = (jsid,appid) =>{
         setAppid(appid);

@@ -28,7 +28,7 @@ function GetCompanyJob() {
     }, [id]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center">
+        <div className="min-h-screen flex flex-col items-center ml-6">
             <h2 className="text-4xl font-extrabold text-blue-600 mb-6">Company Job Listings</h2>
 
             {loading && <Loader2 className="animate-spin text-blue-500 h-12 w-12" />}

@@ -11,7 +11,7 @@ function CompanyInfo() {
 
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-200 dark:from-gray-900 dark:to-gray-800 px-6 py-10">
+        <div className="min-h-screen flex items-center justify-center mt-4">
             <div className="w-full max-w-3xl bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-10 border border-gray-200 dark:border-gray-700 relative">
 
                 {/* Header - Logo & Company Name */}

@@ -36,6 +36,7 @@ import InterviewerEditProfile from './Components/Interviewer_Edit_Profile/Interv
 import ScheduleInterview from './Components/ScheduleInterview/ScheduleInterview';
 import GetApplicantForInterview from './Components/GetApplicantForInterview/GetApplicantForInterview';
 import GetScheduledInterwiew from './Components/GetScheduledInterwiew/GetScheduledInterwiew';
+import ScheduleZoomInterview from './Components/ScheduleZoomInterview/ScheduleZoomInterview';
 
 // Route protection components
 const ProtectedRoute = ({ role, redirectPath = '/', children }) => {
@@ -68,7 +69,9 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/job/:id" element={<JobDetail />} />
         <Route path="/showjob" element={<ShowJobs />} />
-
+        {currentUser?.role === "interviewer" &&
+          <Route path="/meetingDetail" element={<ScheduleZoomInterview />} />
+        }
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           {/* Profile routes */}
@@ -77,23 +80,23 @@ function App() {
               index
               element={
                 currentUser?.role === "jobseeker" ? <Navigate to="JobSeeker" replace /> :
-                currentUser?.role === "interviewer" ? <Navigate to="Interviewer" replace /> :
-                <Navigate to="Company" replace />
+                  currentUser?.role === "interviewer" ? <Navigate to="Interviewer" replace /> :
+                    <Navigate to="Company" replace />
               }
             />
             <Route path="JobSeeker" element={<JobSeekerInfo />} />
             <Route path="Company" element={<CompanyInfo />} />
             <Route path="Interviewer" element={<InterviewerInfo />} />
             <Route path="Create-Subscription" element={<CreateSubscriptionPlan />} />
-            
+
             {/* Edit profile route */}
-            <Route 
-              path="edit-profile/:id" 
+            <Route
+              path="edit-profile/:id"
               element={
                 currentUser?.role === "company" ? <Com_Edit_Profile /> :
-                currentUser?.role === "interviewer" ? <InterviewerEditProfile /> :
-                currentUser?.role === "jobseeker" ? <EditProfile /> :
-                <Navigate to="/profile" replace />
+                  currentUser?.role === "interviewer" ? <InterviewerEditProfile /> :
+                    currentUser?.role === "jobseeker" ? <EditProfile /> :
+                      <Navigate to="/profile" replace />
               }
             />
 
@@ -153,7 +156,7 @@ function App() {
         </Route>
 
         {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
       <Footer />
     </BrowserRouter>
