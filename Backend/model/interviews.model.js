@@ -20,6 +20,10 @@ const interviewSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    duration: {
+        type: Number,
+        required: true,
+      },
     status: {
         type : String,
         enum: ["scheduled", "completed", "cancelled"],

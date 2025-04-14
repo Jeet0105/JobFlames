@@ -3,6 +3,7 @@ import Job from "../model/Job.modem.js";
 import JobSeeker from "../model/JobSeeker.model.js";
 import Interviewer from "../model/Interviewer.model.js";
 import Interview from "../model/interviews.model.js";
+import Application from "../model/Application.model.js";
 import moment from 'moment';
 
 const getAuthorizedToken = async (req, res) => {
@@ -41,9 +42,7 @@ const getAuthorizedToken = async (req, res) => {
   }
 };
 
-const createZoomMeeting = async (req, res) => {
-  console.log(req.body);
-  
+const createZoomMeeting = async (req, res) => {  
   const { accessToken, topic, startTime, duration, job_id, jobseeker_id, interviewer_id } = req.body;
 
   try {
@@ -122,9 +121,9 @@ const createZoomMeeting = async (req, res) => {
       jobseeker_id: jobseeker_id,
       interviewer_id: interviewer_id,
       interview_date: startTime,
-      start_url: response?.data?.start_url
+      start_url: response?.data?.start_url,
+      duration
     });
-    console.log("S",response?.data?.start_url);
     
     if (!interviewss) {
       return res.status(500).json({
@@ -133,12 +132,12 @@ const createZoomMeeting = async (req, res) => {
         success: false
       })
     }
-
+    
     return res.status(200).json({
       message: "Zoom meeting created successfully",
       status: 200,
       success: true,
-      data: interviewss
+      data: interviewss,
     })
 
   } catch (error) {

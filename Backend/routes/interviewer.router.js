@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllApplicantForInterview, getallinterviewer, getAllJobsForInterviewer, getAllMyScheduledInterview, updateInterviewer } from '../controller/interviewer.controller.js';
+import { getAllApplicantForInterview, getallinterviewer, getAllJobsForInterviewer, getAllMyScheduledInterview, updateInterviewer, updateInterviewStatus } from '../controller/interviewer.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 import { uploadMiddleware } from '../middleware/upload.middleware.js';
 
@@ -10,5 +10,6 @@ router.put("/updateInterviewer",verifyToken,uploadMiddleware,updateInterviewer);
 router.get("/getAllJobsForInterviewer",verifyToken,getAllJobsForInterviewer);
 router.get("/getAllApplicantForInterview/:id",verifyToken,getAllApplicantForInterview)
 router.get("/getAllMyScheduledInterviews",verifyToken,getAllMyScheduledInterview)
+router.put("/updateInterviewStatus/:id",verifyToken,updateInterviewStatus)
 
 export default router;

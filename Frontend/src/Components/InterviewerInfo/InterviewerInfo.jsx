@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 function InterviewerInfo() {
     const currentUser = useSelector((state) => state.user.currentUser);
     const navigate = useNavigate();
-    console.log("currentUser: ", currentUser);
 
     const renderStars = (rating) => {
         const stars = [];

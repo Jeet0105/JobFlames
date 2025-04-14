@@ -269,7 +269,7 @@ export const changeStatus = async (req, res) => {
     const { status } = req.body;
         
     // Validate if the provided status is allowed
-    const allowedStatuses = ["applied", "shortlisted", "interview", "hired", "rejected"];
+    const allowedStatuses = ["applied", "shortlisted", "interview", "rejected","hired"];
     if (!allowedStatuses.includes(status)) {
         return res.status(400).json({ message: "Invalid status value provided." });
     }

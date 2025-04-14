@@ -32,6 +32,41 @@ function GetScheduledInterwiew() {
     fetchInterviews();
   }, []);
 
+  useEffect(() => {
+    const isCompleted = () => {
+      interviews.forEach((i) => {
+        const startTime = moment.utc(i.interview_date);
+        const endTime = startTime.clone().add(i.duration, "minutes");
+        const now = moment.utc();
+
+        const isCom = now.isAfter(endTime);
+
+        if (isCom) {
+          console.log("Trying to update status for:", i.application_id);
+          updateStatus(i._id, "completed");
+        }
+
+      });
+    };
+
+    if (interviews.length > 0) {
+      isCompleted();
+    }
+  }, [interviews]);
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/api/v1/interviewer/updateInterviewStatus/${id}`,
+        { status: newStatus },
+        { withCredentials: true }
+      );
+      
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to update status.");
+    }
+  };
+
   return (
     <div className="min-h-screen ml-2 p-6">
       <h2 className="text-3xl font-bold text-blue-500 text-center mb-6">Scheduled Interviews</h2>

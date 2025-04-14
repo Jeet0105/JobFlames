@@ -253,28 +253,46 @@ export const getAllApplicantForInterview = async (req, res) => {
 
 export const getAllMyScheduledInterview = async (req, res) => {
     const id = req.user.id;
+
     try {
         const ScheduledInterviews = await Interview.find({
             interviewer_id: id,
-            status: "scheduled"
+            status: "scheduled",
         })
             .populate({
                 path: "jobseeker_id",
-                select: "name email profilePicture resumeUrl contact_no experience"
+                select: "name email profilePicture resumeUrl contact_no experience",
             })
             .populate({
                 path: "job_id",
-                select: "title company location"
+                select: "title company location",
             });
 
         if (!ScheduledInterviews || ScheduledInterviews.length === 0) {
-            return res.status(404).json({ message: "No Scheduled Interview", success: false });
+            return res.status(404).json({
+                message: "No Scheduled Interview",
+                success: false,
+            });
         }
+
+        const enrichedInterviews = await Promise.all(
+            ScheduledInterviews.map(async (interview) => {
+                const application = await Application.findOne({
+                    job_id: interview.job_id._id,
+                    applicant_id: interview.jobseeker_id._id,
+                });
+
+                return {
+                    ...interview.toObject(),
+                    application_id: application?._id || null,
+                };
+            })
+        );
 
         return res.status(200).json({
             message: "Scheduled Interviews",
-            data: ScheduledInterviews,
-            success: true
+            data: enrichedInterviews,
+            success: true,
         });
     } catch (error) {
         console.error("Error fetching scheduled interviews:", error);
@@ -285,3 +303,41 @@ export const getAllMyScheduledInterview = async (req, res) => {
         });
     }
 };
+
+export const updateInterviewStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    console.log("in intee");
+    
+    try {
+        if (!status) {
+            return res.status(400).json({ message: "Status is required" });
+        }
+        const updatedInterview = await Interview.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
+        if (!updatedInterview) {
+            return res.status(404).json({
+                message: "Interview not found",
+                status: 404,
+                success: false,
+                data: updatedInterview
+            })
+        }
+        return res.status(200).json({
+            message: "Interview status updated",
+            status: 404,
+            success: true,
+        })
+    } catch (error) {
+        console.error("Error fetching shortlisted applicants:", error);
+        return res.status(500).json({
+            message: "Internal server error.",
+            status: 500,
+            success: false,
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+}
