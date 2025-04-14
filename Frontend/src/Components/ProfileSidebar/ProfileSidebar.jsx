@@ -89,6 +89,11 @@ function ProfileSidebar() {
                     <SidebarItem to='/profile/getScheduleInterview' icon={FaCalendarCheck} text="Get Scheduled Interview" />
                 )}
 
+                {/* Get Completed Interview - interviewer */}
+                {currentUser?.role === "interviewer" && (
+                    <SidebarItem to='/profile/getCompletedInterview' icon={FaCalendarCheck} text="Get Completed Interview" />
+                )}
+
                 {currentUser?.role === "jobseeker" && !currentUser?.isAdmin && (
                     <SidebarItem to='/profile/getappiedjobs' icon={FaCheckCircle} text="Applied Jobs" />
                 )}

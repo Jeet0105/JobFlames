@@ -6,7 +6,7 @@ export const apply = async (req, res) => {
     try {
         const { job_id } = req.params;
         const jobseeker_id = req.user.id;
-        
+
         if (!job_id || !jobseeker_id) {
             return res.status(400).json({ message: "Job ID or Job Seeker ID are required" });
         }
@@ -41,5 +41,36 @@ export const apply = async (req, res) => {
     } catch (error) {
         console.error("Error applying for job:", error);
         return res.status(500).json({ message: "Internal server error. Please try again later." });
+    }
+};
+
+export const handleStatusChange = async (req, res) => {
+    const { appid, status } = req.body;
+
+    try {
+        const updatedApplication = await Application.findByIdAndUpdate(
+            appid,
+            { status },
+            { new: true }
+        );
+
+        if (!updatedApplication) {
+            return res.status(404).json({
+                message: "Application not found.",
+                success: false,
+            });
+        }
+
+        return res.status(200).json({
+            message: "Status updated successfully.",
+            success: true,
+            data: updatedApplication,
+        });
+    } catch (error) {
+        console.error("Error updating application:", error);
+        return res.status(500).json({
+            message: "Internal server error. Please try again later.",
+            success: false,
+        });
     }
 };

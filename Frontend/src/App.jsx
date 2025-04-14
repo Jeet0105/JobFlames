@@ -37,6 +37,7 @@ import ScheduleInterview from './Components/ScheduleInterview/ScheduleInterview'
 import GetApplicantForInterview from './Components/GetApplicantForInterview/GetApplicantForInterview';
 import GetScheduledInterwiew from './Components/GetScheduledInterwiew/GetScheduledInterwiew';
 import ScheduleZoomInterview from './Components/ScheduleZoomInterview/ScheduleZoomInterview';
+import GetCompletedInterview from './Components/GetCompletedInterview/GetCompletedInterview';
 
 // Route protection components
 const ProtectedRoute = ({ role, redirectPath = '/', children }) => {
@@ -128,6 +129,7 @@ function App() {
                 <Route path="myjobdetail/:id" element={<GetApplicantForInterview />} />
                 <Route path="scheduleInterview" element={<ScheduleInterview />} />
                 <Route path="getScheduleInterview" element={<GetScheduledInterwiew />} />
+                <Route path="getCompletedInterview" element={<GetCompletedInterview />} />
               </>
             )}
 
@@ -156,7 +158,7 @@ function App() {
         </Route>
 
         {/* Fallback route */}
-        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
     </BrowserRouter>

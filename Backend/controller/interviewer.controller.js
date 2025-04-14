@@ -357,15 +357,32 @@ export const getAllCompletedInterviews = async (req, res) => {
                 path: "job_id",
                 select: "title company location",
             });
+        // console.log(completedInterview);
+        
         if (!completedInterview || completedInterview.length === 0) {
             return res.status(404).json({
                 message: "No Completed Interview",
                 success: false,
             });
         }
+        const enrichedInterviews = await Promise.all(
+            completedInterview.map(async (interview) => {
+                const application = await Application.findOne({
+                    job_id: interview.job_id._id,
+                    applicant_id: interview.jobseeker_id._id,
+                });
+
+                return {
+                    ...interview.toObject(),
+                    application_id: application?._id || null,
+                };
+            })
+        );
+        // console.log("ei",enrichedInterviews);
+        
         return res.status(200).json({
             message: "Completed Interviews",
-            data: completedInterview,
+            data: enrichedInterviews,
             success: true,
         });
     } catch (error) {
