@@ -23,17 +23,17 @@ const interviewSchema = new mongoose.Schema({
     duration: {
         type: Number,
         required: true,
-      },
-    status: {
-        type : String,
-        enum: ["scheduled", "completed", "cancelled"],
-        default: "scheduled",        
     },
-    start_url : {
-        type : String,
-        default : ""
+    status: {
+        type: String,
+        enum: ["scheduled", "completed", "cancelled"],
+        default: "scheduled",
+    },
+    start_url: {
+        type: String,
+        default: ""
     }
-},{timestamps:true});
+}, { timestamps: true });
 
 const Interview = mongoose.model("Interview", interviewSchema);
 export default Interview;

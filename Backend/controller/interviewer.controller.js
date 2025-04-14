@@ -307,8 +307,7 @@ export const getAllMyScheduledInterview = async (req, res) => {
 export const updateInterviewStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
-    console.log("in intee");
-    
+
     try {
         if (!status) {
             return res.status(400).json({ message: "Status is required" });
@@ -338,6 +337,43 @@ export const updateInterviewStatus = async (req, res) => {
             status: 500,
             success: false,
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+}
+
+export const getAllCompletedInterviews = async (req, res) => {
+    const id = req.user.id;
+
+    try {
+        const completedInterview = await Interview.find({
+            interviewer_id: id,
+            status: "completed",
+        })
+            .populate({
+                path: "jobseeker_id",
+                select: "name email profilePicture resumeUrl contact_no experience",
+            })
+            .populate({
+                path: "job_id",
+                select: "title company location",
+            });
+        if (!completedInterview || completedInterview.length === 0) {
+            return res.status(404).json({
+                message: "No Completed Interview",
+                success: false,
+            });
+        }
+        return res.status(200).json({
+            message: "Completed Interviews",
+            data: completedInterview,
+            success: true,
+        });
+    } catch (error) {
+        console.error("Error fetching completed interviews:", error);
+        res.status(500).json({
+            message: "Internal server error.",
+            status: 500,
+            success: false,
         });
     }
 }

@@ -28,9 +28,6 @@ export const login = async (req, res) => {
             return res.status(404).json({ message: "User does not exist. Please register first." });
         }
 
-        console.log('user.password: ', user.password);
-        console.log('user: ', user);
-        console.log('password: ', password);
         const validPassword = await bcryptjs.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ message: "Invalid credentials. Please check your email or password." });
@@ -62,7 +59,6 @@ export const login = async (req, res) => {
                 { expiresIn: "5h" }
             );
 
-            console.log('{ ...rest, role }: ', { ...rest, role });
             return res
                 .status(200)
                 .cookie("access_token", token, {
